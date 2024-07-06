@@ -1,0 +1,43 @@
+.services {
+    padding: 4rem 2rem;
+    background-color: #f9f9f9;
+    text-align: center;
+  
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+  
+    .service-list {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+  
+    .service-item {
+      width: 30%;
+      margin-bottom: 2rem;
+  
+      img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
+      }
+  
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+  
+      p {
+        font-size: 1rem;
+      }
+    }
+  
+    @media (max-width: 768px) {
+      .service-item {
+        width: 80%;
+      }
+    }
+  }
+  
