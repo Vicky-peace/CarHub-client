@@ -7,6 +7,7 @@ import ContactSection from './components/Contact/Contact';
 import WhyChoose from './components/WhyChooseUs/choose';
 import './App.scss';
 import About from './components/AboutUs/About';
+import Footer from './components/Footer/Footer';
 const App = () => {
   return (
     <Router>
@@ -18,6 +19,7 @@ const App = () => {
           <WhyChoose />
           <ServicesSection />
           <ContactSection />
+          <Footer />
         
         </>} />
         <Route path="/" element={<HeroSection />} />

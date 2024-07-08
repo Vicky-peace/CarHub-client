@@ -1,71 +1,75 @@
 .hero {
+  position: relative;
+  background-image: url('../../assets/images/Development and manufacturing of restyling body kits for premium cars.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  text-align: center;
+  padding: 4rem 2rem;
+  height: 50vh;  
+
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); // Adjust the overlay color and opacity as needed
+    z-index: 1;
+  }
+
+  .words {
     position: relative;
-    background-image: url('../../assets/images/Development and manufacturing of restyling body kits for premium cars.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: white;
-    text-align: center;
-    padding: 4rem 2rem;
-    height: 30vh;
-  
-.words{
+    z-index: 2;
     margin-top: 100px;
-}
-  
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);  // Adjust the overlay color and opacity as needed
-      z-index: 1;
-    }
-  
-    h1, p, button {
-      position: relative;
-      z-index: 2;
-    }
-  
+
     h1 {
-      font-size: 2.5rem;
+      font-size: 3rem;
       margin-bottom: 1rem;
     }
-  
+
     p {
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       margin-bottom: 2rem;
     }
-  
+
     button {
       background-color: #ff6200;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.75rem 1.5rem;
       color: white;
       cursor: pointer;
-      font-size: 1rem;
-  
+      font-size: 1.25rem;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+
       &:hover {
         background-color: #e55b00;
       }
     }
-  
-    @media (max-width: 768px) {
-      padding: 2rem 1rem;
-  
+  }
+
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+    height: 30vh;  // Adjusted height for smaller screens
+
+    .words {
       h1 {
-        font-size: 2rem;
+        font-size: 2.5rem;
       }
-  
+
       p {
-        font-size: 1rem;
+        font-size: 1.2rem;
       }
-  
+
       button {
-        font-size: 0.9rem;
+        font-size: 1rem;
       }
     }
   }
-  
+}

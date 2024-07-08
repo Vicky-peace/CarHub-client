@@ -1,9 +1,8 @@
-
 import './choose.scss';
 import supportIcon from '../../assets/images/dashboard.png'; // Replace with actual icon path
 import mobileIcon from '../../assets/images/dashboard.png'; // Replace with actual icon path
-import businessIcon from '../../assets/images/dashboard.png'; // Replace with actual icon path
-import salesIcon from '../../assets/images/dashboard.png'; // Replace with actual icon path
+import businessIcon from '../../assets/images/car image.webp'; // Replace with actual icon path
+import salesIcon from '../../assets/images/car image.webp'; // Replace with actual icon path
 
 const WhyChoose = () => {
   return (
@@ -15,20 +14,47 @@ const WhyChoose = () => {
           <h3>Customer Support</h3>
           <p>Our support team is at your service 24/7, ready to assist you whenever you need it.</p>
         </div>
+
+        <div className="feature">
+          <img src={supportIcon} alt="Customer Support" />
+          <h3>Customer Support</h3>
+          <p>Our support team is at your service 24/7, ready to assist you whenever you need it.</p>
+        </div>
+
+
+        <div className="feature">
+          <img src={supportIcon} alt="Customer Support" />
+          <h3>Customer Support</h3>
+          <p>Our support team is at your service 24/7, ready to assist you whenever you need it.</p>
+        </div>
+
+        <div className="feature">
+          <img src={supportIcon} alt="Customer Support" />
+          <h3>Customer Support</h3>
+          <p>Our support team is at your service 24/7, ready to assist you whenever you need it.</p>
+        </div>
+
+        <div className="feature">
+          <img src={supportIcon} alt="Customer Support" />
+          <h3>Customer Support</h3>
+          <p>Our support team is at your service 24/7, ready to assist you whenever you need it.</p>
+        </div>
+
+        
         <div className="feature">
           <img src={mobileIcon} alt="Premium Mobile Solution" />
           <h3>Premium Mobile Solution</h3>
-          <p>Make a reservation, inspect your car, and overview your business while having coffee.</p>
+          <p>Make a reservation, inspect your car, and manage your bookings on the go with our mobile app.</p>
         </div>
         <div className="feature">
           <img src={businessIcon} alt="Focus on your business" />
-          <h3>Focus on your business</h3>
-          <p>Direct your full attention to your business operations while we efficiently handle all your technical requirements.</p>
+          <h3>Focus on Your Business</h3>
+          <p>Direct your full attention to your business operations while we efficiently handle all your rental needs.</p>
         </div>
         <div className="feature">
-          <img src={salesIcon} alt="Boost your sales" />
-          <h3>Boost your sales</h3>
-          <p>Boost your direct sales and reduce your broker fees with our fully managed booking engine.</p>
+          <img src={salesIcon} alt="Boost Your Sales" />
+          <h3>Boost Your Sales</h3>
+          <p>Increase your sales and reduce broker fees with our fully managed booking engine.</p>
         </div>
       </div>
     </section>
