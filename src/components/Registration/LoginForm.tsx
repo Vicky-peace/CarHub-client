@@ -1,22 +1,11 @@
+// SignIn.tsx
+
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
-  Box,
-  Typography,
-  Container,
-  Alert,
-} from '@mui/material';
+import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useLoginMutation } from'../../AuthApi'; // Ensure the correct path to your authApi
+import { useLoginMutation } from '../../AuthApi'; // Ensure the correct path to your authApi
 
 function Copyright(props: any) {
   return (
@@ -36,28 +25,25 @@ const theme = createTheme();
 export default function SignIn() {
   const navigate = useNavigate();
   const [login] = useLoginMutation();
-  const [error, setError] = React.useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const email = data.get('email') as string;
+    const username = data.get('username') as string;
     const password = data.get('password') as string;
-
+    
     try {
-      const response = await login({ email, password }).unwrap();
+      const response = await login({ username, password }).unwrap();
       const { token, role } = response;
-
-      // Save token and set user role
+      
       localStorage.setItem('token', token);
-
+      
       if (role === 'admin') {
         navigate('/admin/dashboard');
       } else {
         navigate('/user/dashboard');
       }
     } catch (error) {
-      setError('Failed to login. Please check your credentials and try again.');
       console.error('Failed to login:', error);
     }
   };
@@ -66,14 +52,7 @@ export default function SignIn() {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+        <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -81,34 +60,12 @@ export default function SignIn() {
             Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            <TextField margin="normal" required fullWidth id="username" label="Username" name="username" autoComplete="username" autoFocus />
+            <TextField margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
+            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>
-            {error && <Alert severity="error">{error}</Alert>}
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">

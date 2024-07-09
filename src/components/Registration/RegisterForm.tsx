@@ -1,3 +1,5 @@
+// SignUp.tsx
+
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container } from '@mui/material';
@@ -27,15 +29,14 @@ export default function SignUp() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const fullName = data.get('fullName') as string;
+    const username = data.get('username') as string;
     const email = data.get('email') as string;
     const password = data.get('password') as string;
     
     try {
-      const response = await register({ fullName, email, password }).unwrap();
+      const response = await register({ username, email, password }).unwrap();
       const { token, role } = response;
       
-      // Save token and set user role
       localStorage.setItem('token', token);
       
       if (role === 'admin') {
@@ -62,7 +63,7 @@ export default function SignUp() {
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <TextField autoComplete="given-name" name="fullName" required fullWidth id="fullName" label="Full Name" autoFocus />
+                <TextField autoComplete="given-name" name="username" required fullWidth id="username" label="Username" autoFocus />
               </Grid>
               <Grid item xs={12}>
                 <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
