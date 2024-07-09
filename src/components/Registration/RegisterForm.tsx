@@ -1,11 +1,12 @@
-// SignUp.tsx
-
 import * as React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container } from '@mui/material';
+import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container, IconButton, CircularProgress } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRegisterMutation } from '../../AuthApi'; // Ensure the correct path to your authApi
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { green } from '@mui/material/colors';
 
 function Copyright(props: any) {
   return (
@@ -24,7 +25,8 @@ const theme = createTheme();
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const [register] = useRegisterMutation();
+  const [register, { isLoading }] = useRegisterMutation();
+  const [registrationSuccessful, setRegistrationSuccessful] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -38,15 +40,13 @@ export default function SignUp() {
 
     try {
       const response = await register({ username, email, password, full_name, contact_phone, address }).unwrap();
-      const { token, role } = response;
+      const { token } = response;
 
       localStorage.setItem('token', token);
+      setRegistrationSuccessful(true); // Set registration success state
 
-      if (role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/user/dashboard');
-      }
+      // Redirect to login form after successful registration
+      navigate('/login');
     } catch (error) {
       console.error('Failed to register:', error);
     }
@@ -63,41 +63,55 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField autoComplete="given-name" name="full_name" required fullWidth id="full_name" label="Full Name" autoFocus />
+          {!registrationSuccessful ? (
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField autoComplete="given-name" name="full_name" required fullWidth id="full_name" label="Full Name" autoFocus />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField required fullWidth id="contact_phone" label="Contact Phone" name="contact_phone" autoComplete="tel" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField required fullWidth id="address" label="Address" name="address" autoComplete="address" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField autoComplete="username" name="username" required fullWidth id="username" label="Username" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField required fullWidth name="password" label="Password" type="password" id="password" autoComplete="new-password" />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel control={<Checkbox value="allowExtraEmails" color="primary" />} label="I want to receive inspiration, marketing promotions and updates via email." />
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <TextField required fullWidth id="contact_phone" label="Contact Phone" name="contact_phone" autoComplete="tel" />
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Link href="/signin" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <TextField required fullWidth id="address" label="Address" name="address" autoComplete="address" />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField autoComplete="username" name="username" required fullWidth id="username" label="Username" />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField required fullWidth name="password" label="Password" type="password" id="password" autoComplete="new-password" />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel control={<Checkbox value="allowExtraEmails" color="primary" />} label="I want to receive inspiration, marketing promotions and updates via email." />
-              </Grid>
-            </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-              <Link href="/signup" variant="body2">
-              {"Already have an account? Sign In"}
-              </Link>
-              </Grid>
-            </Grid>
-          </Box>
+            </Box>
+          ) : (
+            <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Typography variant="body1" color="textSecondary" gutterBottom>
+                Registration Successful
+              </Typography>
+              <IconButton style={{ color: green[500] }}>
+                <CheckCircleIcon fontSize="large" />
+              </IconButton>
+              <Typography variant="body2" color="textSecondary">
+                You can now login with your credentials.
+              </Typography>
+            </Box>
+          )}
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
