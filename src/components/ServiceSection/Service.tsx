@@ -1,16 +1,16 @@
 import './Service.scss';
-import rentalIcon from '../../assets/images/dashboard.png'; // Replace with actual icon path
-import maintenanceIcon from '../../assets/images/car image.webp'; // Replace with actual icon path
-import insuranceIcon from '../../assets/images/Development and manufacturing of restyling body kits for premium cars.jpeg'; // Replace with actual icon path
-import supportIcon from '../../assets/images/car image.webp'; // Replace with actual icon path
-import gpsIcon from '../../assets/images/Development and manufacturing of restyling body kits for premium cars.jpeg'; // Replace with actual icon path
-import fuelIcon from '../../assets/images/dashboard.png'; // Replace with actual icon path
-import deliveryIcon from '../../assets/images/car image.webp'; // Replace with actual icon path
-import luxuryIcon from '../../assets/images/dashboard.png'; // Replace with actual icon path
+import rentalIcon from '../../assets/images/car-loan.png'; // Replace with actual icon path
+import maintenanceIcon from '../../assets/images/car-repair.png'; // Replace with actual icon path
+import insuranceIcon from '../../assets/images/insurance.png'; // Replace with actual icon path
+import supportIcon from '../../assets/images/emergency-services.png'; // Replace with actual icon path
+import gpsIcon from '../../assets/images/gps.png'; // Replace with actual icon path
+import fuelIcon from '../../assets/images/petrol-pump.png'; 
+import deliveryIcon from '../../assets/images/shipped.png'; // Replace with actual icon path
+import luxuryIcon from '../../assets/images/car-service.png'; // Replace with actual icon path
 import ecoIcon from '../../assets/images/car image.webp'; // Replace with actual icon path
-import airportIcon from '../../assets/images/dashboard.png'; // Replace with actual icon path
+import airportIcon from '../../assets/images/airplane.png'; // Replace with actual icon path
 import chauffeurIcon from '../../assets/images/car image.webp'; // Replace with actual icon path
-import roadsideIcon from '../../assets/images/car image.webp'; // Replace with actual icon path
+import roadsideIcon from '../../assets/images/location (1).png'; // Replace with actual icon path
 
 
 

@@ -1,8 +1,8 @@
 import './choose.scss';
-import supportIcon from '../../assets/images/dashboard.png'; // Replace with actual icon path
-import mobileIcon from '../../assets/images/dashboard.png'; // Replace with actual icon path
-import businessIcon from '../../assets/images/car image.webp'; // Replace with actual icon path
-import salesIcon from '../../assets/images/car image.webp'; // Replace with actual icon path
+import supportIcon from '../../assets/images/car-repair.png'; // Replace with actual icon path
+import mobileIcon from '../../assets/images/telephone.png'; // Replace with actual icon path
+import businessIcon from '../../assets/images/sale.png'; // Replace with actual icon path
+import salesIcon from '../../assets/images/sale.png'; // Replace with actual icon path
 
 const WhyChoose = () => {
   return (

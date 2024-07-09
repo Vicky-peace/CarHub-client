@@ -12,8 +12,7 @@ body {
   font-family: $font-family;
   background-color: $background-color;
   color: $text-color;
-  padding: 0;
-  max-width: 90%;
+
   margin: 0 auto;
 }
 
@@ -56,23 +55,23 @@ button {
   box-shadow: $box-shadow;
 }
 
-// Navbar Styles
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: $primary-color;
-  padding: 1rem;
-  box-shadow: $box-shadow;
+// // Navbar Styles
+// .navbar {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   background-color: $primary-color;
+//   padding: 1rem;
+//   box-shadow: $box-shadow;
 
-  a {
-    color: white;
-    padding: 0.5rem 1rem;
-    &:hover {
-      background-color: darken($primary-color, 10%);
-    }
-  }
-}
+//   a {
+//     color: white;
+//     padding: 0.5rem 1rem;
+//     &:hover {
+//       background-color: darken($primary-color, 10%);
+//     }
+//   }
+// }
 
 // Section Styles
 .section {

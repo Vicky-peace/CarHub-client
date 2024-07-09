@@ -10,9 +10,9 @@ export default {
   plugins: [require('daisyui')],
 
 
-  daisyui: {
-    logs: false, // Disable logs if necessary
-  },
+  // daisyui: {
+  //   logs: false, // Disable logs if necessary
+  // },
 
 }
 

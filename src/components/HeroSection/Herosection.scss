@@ -1,16 +1,42 @@
+@keyframes flashRed {
+  0% {
+    color: white;
+  }
+  50% {
+    color: red;
+  }
+  100% {
+    color: white;
+  }
+}
+
+@keyframes changeBackground {
+  0% {
+    background-image: url('../../assets/images/couple-near-new-white-car-man-driving-work-his-wife-will-waiting-him.jpg');
+  }
+  33% {
+    background-image: url('../../assets/images/The\ BMW\ M850i\ at\ SIXT.jpeg');
+  }
+  66% {
+    background-image: url('../../assets/images/Car\ Rentals\ _\ Mack\ Car\ Rentals\ _\ Eleuthera\,\ Bahamas.jpeg');
+  }
+  100% {
+    background-image: url('../../assets/images/red-sedan-car-isolated-white-vector_53876-64366.jpg');
+  }
+}
+
 .hero {
   position: relative;
-  background-image: url('../../assets/images/Development and manufacturing of restyling body kits for premium cars.jpeg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   color: white;
   text-align: center;
   padding: 4rem 2rem;
-  height: 50vh;  
-
+  height: 50vh;
   align-items: center;
   justify-content: center;
+  animation: changeBackground 15s infinite linear;
 
   &::before {
     content: "";
@@ -34,8 +60,10 @@
     }
 
     p {
-      font-size: 1.5rem;
+      font-size: 1.9rem;
+      font-weight:bold;
       margin-bottom: 2rem;
+      animation: flashRed 1s infinite;
     }
 
     button {
