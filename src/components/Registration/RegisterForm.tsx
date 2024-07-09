@@ -1,32 +1,24 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container, IconButton, CircularProgress } from '@mui/material';
+import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container, IconButton, CircularProgress, Snackbar } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRegisterMutation } from '../../AuthApi'; // Ensure the correct path to your authApi
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { green } from '@mui/material/colors';
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import CloseIcon from '@mui/icons-material/Close';
 
 const theme = createTheme();
 
-export default function SignUp() {
+function SignUp() {
   const navigate = useNavigate();
   const [register, { isLoading }] = useRegisterMutation();
-  const [registrationSuccessful, setRegistrationSuccessful] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [timeoutError, setTimeoutError] = useState(false);
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,10 +35,17 @@ export default function SignUp() {
       const { token } = response;
 
       localStorage.setItem('token', token);
-      setRegistrationSuccessful(true); // Set registration success state
+      setShowSuccessMessage(true); // Set success message state
+      setOpenSnackbar(true); // Open snackbar
 
-      // Redirect to login form after successful registration
-      navigate('/login');
+      // Simulate timeout error after 3 seconds for demonstration
+      setTimeout(() => {
+        if (!showSuccessMessage) {
+          setTimeoutError(true);
+        }
+      }, 3000);
+
+      navigate('/login'); // Redirect to login form after successful registration
     } catch (error) {
       console.error('Failed to register:', error);
     }
@@ -63,58 +62,67 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          {!registrationSuccessful ? (
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField autoComplete="given-name" name="full_name" required fullWidth id="full_name" label="Full Name" autoFocus />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField required fullWidth id="contact_phone" label="Contact Phone" name="contact_phone" autoComplete="tel" />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField required fullWidth id="address" label="Address" name="address" autoComplete="address" />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField autoComplete="username" name="username" required fullWidth id="username" label="Username" />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField required fullWidth name="password" label="Password" type="password" id="password" autoComplete="new-password" />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControlLabel control={<Checkbox value="allowExtraEmails" color="primary" />} label="I want to receive inspiration, marketing promotions and updates via email." />
-                </Grid>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField autoComplete="given-name" name="full_name" required fullWidth id="full_name" label="Full Name" autoFocus />
               </Grid>
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
-              </Button>
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <Link href="/signin" variant="body2">
-                    Already have an account? Sign in
-                  </Link>
-                </Grid>
+              <Grid item xs={12}>
+                <TextField required fullWidth id="contact_phone" label="Contact Phone" name="contact_phone" autoComplete="tel" />
               </Grid>
-            </Box>
-          ) : (
-            <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Typography variant="body1" color="textSecondary" gutterBottom>
-                Registration Successful
-              </Typography>
-              <IconButton style={{ color: green[500] }}>
-                <CheckCircleIcon fontSize="large" />
-              </IconButton>
-              <Typography variant="body2" color="textSecondary">
-                You can now login with your credentials.
-              </Typography>
-            </Box>
+              <Grid item xs={12}>
+                <TextField required fullWidth id="address" label="Address" name="address" autoComplete="address" />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField autoComplete="username" name="username" required fullWidth id="username" label="Username" />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField required fullWidth name="password" label="Password" type="password" id="password" autoComplete="new-password" />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel control={<Checkbox value="allowExtraEmails" color="primary" />} label="I want to receive inspiration, marketing promotions and updates via email." />
+              </Grid>
+            </Grid>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/signin" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+          {timeoutError && (
+            <Typography variant="body2" color="error" align="center">
+              Timeout Error: Please try again later.
+            </Typography>
           )}
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={openSnackbar}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+            message="Registration Successful! You can now login."
+            action={
+              <React.Fragment>
+                <IconButton size="small" aria-label="close" color="inherit" onClick={handleSnackbarClose}>
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </React.Fragment>
+            }
+          />
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );
 }
+
+export default SignUp;
