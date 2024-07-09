@@ -30,9 +30,20 @@ function SignUp() {
     const contact_phone = data.get('contact_phone') as string;
     const address = data.get('address') as string;
 
+    console.log('Form Data:', {
+      username,
+      email,
+      password,
+      full_name,
+      contact_phone,
+      address
+    });
+
     try {
       const response = await register({ username, email, password, full_name, contact_phone, address }).unwrap();
       const { token } = response;
+
+      console.log('Registration Response:', response);
 
       localStorage.setItem('token', token);
       setShowSuccessMessage(true); // Set success message state
