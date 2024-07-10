@@ -72,7 +72,6 @@ const Dashboard: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               Monthly Bookings
             </Typography>
-            {/* Add your custom monthly bookings chart here */}
             <LineChart width={400} height={400} data={vehicleInOutData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
@@ -89,7 +88,6 @@ const Dashboard: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               Revenue Overview
             </Typography>
-            {/* Add your custom revenue overview chart here */}
             <LineChart width={400} height={400} data={vehicleInOutData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
@@ -126,6 +124,6 @@ const Dashboard: React.FC = () => {
       </Grid>
     </Container>
   );
-}
+};
 
 export default Dashboard;
