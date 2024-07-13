@@ -111,11 +111,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </ListItem>
             <ListItem button onClick={() => handleNavigation(<BookVehicle />)}>
               <ListItemIcon><DirectionsCarIcon /></ListItemIcon>
-              <ListItemText primary="Book a Vehicle" />
+              <ListItemText primary="Booked Vehicles" />
             </ListItem>
             <ListItem button onClick={() => handleNavigation(<BookedVehicles />)}>
               <ListItemIcon><ListAltIcon /></ListItemIcon>
-              <ListItemText primary="Booked Vehicles" />
+              <ListItemText primary="Book a Vehicle" />
             </ListItem>
             <ListItem button onClick={() => handleNavigation(<MyTickets />)}>
               <ListItemIcon><AssignmentIcon /></ListItemIcon>

@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, TextField, Button, Grid, Card, CardContent, CardActions, CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Container, Typography, TextField, Button, Grid, Card, CardContent, CardActions,
+  CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress
+} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import car1 from '../../../images/car image.webp';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // Importing the green tick icon
+import { usePostBookingMutation } from './Slices/bookingsApi'; // Importing the mutation hook
 
-const cars = [
-  { id: '1', name: 'Car A', description: 'Description A', rate: 100, numberPlate: 'XYZ123', image: car1 },
-  { id: '2', name: 'Car B', description: 'Description B', rate: 150, numberPlate: 'ABC456', image: car1 },
-  { id: '3', name: 'Car C', description: 'Description C', rate: 200, numberPlate: 'DEF789', image: car1 },
-  { id: '4', name: 'Car D', description: 'Description D', rate: 250, numberPlate: 'GHI012', image: car1 },
-  { id: '5', name: 'Car E', description: 'Description E', rate: 300, numberPlate: 'JKL345', image: car1 },
-  { id: '6', name: 'Car F', description: 'Description F', rate: 350, numberPlate: 'MNO678', image: car1 },
-  { id: '7', name: 'Car G', description: 'Description G', rate: 400, numberPlate: 'PQR901', image: car1 },
-  { id: '8', name: 'Car H', description: 'Description H', rate: 450, numberPlate: 'STU234', image: car1 },
+const initialCars = [
+  { id: '1', name: 'Car A', description: 'Description A', rate: 100, numberPlate: 'XYZ123', image: car1, booked: false },
+  { id: '2', name: 'Car B', description: 'Description B', rate: 150, numberPlate: 'ABC456', image: car1, booked: false },
+  { id: '3', name: 'Car C', description: 'Description C', rate: 200, numberPlate: 'DEF789', image: car1, booked: false },
+  { id: '4', name: 'Car D', description: 'Description D', rate: 250, numberPlate: 'GHI012', image: car1, booked: false },
+  { id: '5', name: 'Car E', description: 'Description E', rate: 300, numberPlate: 'JKL345', image: car1, booked: false },
+  { id: '6', name: 'Car F', description: 'Description F', rate: 350, numberPlate: 'MNO678', image: car1, booked: false },
+  { id: '7', name: 'Car G', description: 'Description G', rate: 400, numberPlate: 'PQR901', image: car1, booked: false },
+  { id: '8', name: 'Car H', description: 'Description H', rate: 450, numberPlate: 'STU234', image: car1, booked: false },
 ];
 
 const useStyles = makeStyles({
@@ -35,11 +40,22 @@ const useStyles = makeStyles({
   cardContent: {
     flexGrow: 1,
   },
+  successMessage: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  successIcon: {
+    color: 'green',
+    marginRight: 10,
+  },
 });
 
 const BookVehicle: React.FC = () => {
   const classes = useStyles();
   const [form, setForm] = useState({
+    booking_id: '',
     user_id: '',
     vehicle_id: '',
     location_id: '',
@@ -47,32 +63,28 @@ const BookVehicle: React.FC = () => {
     return_date: '',
     total_amount: '',
   });
-  const [selectedCarId, setSelectedCarId] = useState<string | null>(null); // Corrected variable name
+  const [selectedCarId, setSelectedCarId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false); // State for success message
+  const [cars, setCars] = useState(initialCars); // State for vehicles, including booked status
+  const [postBooking, { isLoading: isBookingLoading }] = usePostBookingMutation(); // Using the mutation hook
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true);
-    // Simulate an asynchronous operation (e.g., API call) here
-    setTimeout(() => {
-      console.log(form); // Handle form submission logic here
-      setLoading(false);
-      // Reset form state or perform other actions after submission
-    }, 2000); // Simulating a 2-second delay
-  };
-
-  const handleBook = (carId: string) => {
-    setSelectedCarId(carId); // Corrected setter function
-    setForm((prev) => ({ ...prev, vehicle_id: carId }));
-  };
-
-  useEffect(() => {
-    if (!selectedCarId) {
+    try {
+      console.log('Submitting booking with form data:', form);
+      const response = await postBooking(form).unwrap();
+      console.log('Booking successfully submitted:', response);
+      setIsSuccess(true); // Show success message on successful booking
+      markCarAsBooked(form.vehicle_id); // Mark the booked car visually
+      // Optionally, reset form state or perform other actions after submission
       setForm({
+        booking_id: '',
         user_id: '',
         vehicle_id: '',
         location_id: '',
@@ -80,8 +92,25 @@ const BookVehicle: React.FC = () => {
         return_date: '',
         total_amount: '',
       });
+    } catch (error) {
+      console.error('Failed to submit booking:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [selectedCarId]);
+  };
+
+  const handleBook = (carId: string) => {
+    setSelectedCarId(carId);
+    setForm((prev) => ({ ...prev, vehicle_id: carId }));
+  };
+
+  const markCarAsBooked = (carId: string) => {
+    setCars((prevCars) =>
+      prevCars.map((car) =>
+        car.id === carId ? { ...car, booked: true } : car
+      )
+    );
+  };
 
   return (
     <Container>
@@ -103,14 +132,18 @@ const BookVehicle: React.FC = () => {
                 <Typography>Description: {car.description}</Typography>
                 <Typography>Rate: ${car.rate}/day</Typography>
                 <Typography>Number Plate: {car.numberPlate}</Typography>
+                {car.booked && (
+                  <Typography style={{ color: 'green' }}>Booked</Typography>
+                )}
               </CardContent>
               <CardActions>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => handleBook(car.id)}
+                  disabled={car.booked} // Disable booking button if car is already booked
                 >
-                  Book
+                  {car.booked ? 'Booked' : 'Book'}
                 </Button>
               </CardActions>
             </Card>
@@ -123,6 +156,15 @@ const BookVehicle: React.FC = () => {
           <DialogContent>
             <form noValidate autoComplete="off">
               <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    name="booking_id"
+                    label="Booking ID"
+                    fullWidth
+                    value={form.booking_id}
+                    onChange={handleChange}
+                  />
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     name="user_id"
@@ -216,15 +258,27 @@ const BookVehicle: React.FC = () => {
             </form>
           </DialogContent>
           <DialogActions>
-            {loading ? (
-              <CircularProgress size={24} />
-            ) : (
-              <Button variant="contained" color="primary" onClick={handleSubmit}>
-                Submit
-              </Button>
-            )}
+            <Button onClick={() => setSelectedCarId(null)}>Cancel</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              disabled={loading || isBookingLoading}
+            >
+              {loading || isBookingLoading ? (
+                <CircularProgress size={24} />
+              ) : (
+                'Submit Booking'
+              )}
+            </Button>
           </DialogActions>
         </Dialog>
+      )}
+      {isSuccess && (
+        <div className={classes.successMessage}>
+          <CheckCircleIcon className={classes.successIcon} />
+          <Typography variant="body1">Booking Successful!</Typography>
+        </div>
       )}
     </Container>
   );
