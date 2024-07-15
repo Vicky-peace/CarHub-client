@@ -45,9 +45,10 @@ export interface User {
   }
   
   export interface Location {
-    id: number;
+    location_id: number;
     name: string;
     address: string;
+    
   }
   
   export interface Fleet {
