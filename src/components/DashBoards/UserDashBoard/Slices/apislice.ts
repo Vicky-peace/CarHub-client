@@ -3,7 +3,7 @@ import { CarCardProps, VehicleSpec } from './types';
 
 const BASE_URL = 'http://localhost:8000/api';
 
-// Define the API using createApi
+
 export const vehiclesApi = createApi({
   reducerPath: 'vehiclesApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),

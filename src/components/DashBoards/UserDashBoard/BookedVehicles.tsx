@@ -4,25 +4,14 @@ import CarCard from './Slices/carcard';
 import { useGetCombinedVehiclesWithSpecificationsQuery } from './Slices/apislice';
 import { ClipLoader } from 'react-spinners';
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-  Box,
-  Typography,
-  Snackbar,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  Dialog, DialogTitle,DialogContent, DialogActions, Button, TextField, Box,
+  Typography, Snackbar, FormControl,InputLabel, Select, MenuItem,
 } from '@mui/material';
 import { CheckCircle, ErrorOutline } from '@mui/icons-material';
 import carImage from '../../../assets/images/car image.webp';
 import { styled } from '@mui/system'; 
 
-const StyledCarCard = styled('div')(({ theme }) => ({
+const StyledCarCard = styled('div')(() => ({
   transition: 'transform 0.3s, box-shadow 0.3s',
   '&:hover': {
     transform: 'scale(1.05)',
@@ -34,10 +23,10 @@ const VehicleList: React.FC = () => {
   const { data: combinedData, error, isLoading } = useGetCombinedVehiclesWithSpecificationsQuery();
   const [selectedVehicle, setSelectedVehicle] = useState<CarCardProps | null>(null);
   const [bookingFormOpen, setBookingFormOpen] = useState(false);
-  const [bookingSuccess, setBookingSuccess] = useState(false); // State to track booking success
-  const [bookingError, setBookingError] = useState<string | null>(null); // State to track booking error
-  const [pickupDate, setPickupDate] = useState('');
-  const [returnDate, setReturnDate] = useState('');
+  const [bookingSuccess, setBookingSuccess] = useState(false); 
+  const [bookingError, setBookingError] = useState<string | null>(null); 
+  const [pickupDate, setPickupDate] = useState <string>('');
+  const [returnDate, setReturnDate] = useState<string>('');
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
 
@@ -82,7 +71,7 @@ const VehicleList: React.FC = () => {
           vehicleId: selectedVehicle?.vehicle_id,
           pickupDate,
           returnDate,
-          locationId: selectedLocation, // Include selected location ID
+          locationId: selectedLocation,
         }),
       });
 
@@ -95,7 +84,7 @@ const VehicleList: React.FC = () => {
       handleCloseBookingForm();
     } catch (error: any) {
       console.error('Error submitting booking:', error);
-      setBookingError(error.message || 'Failed to book vehicle'); // Set error message
+      setBookingError(error.message || 'Failed to book vehicle'); 
     }
   };
 

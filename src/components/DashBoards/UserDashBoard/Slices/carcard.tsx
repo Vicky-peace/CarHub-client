@@ -2,8 +2,7 @@ import React from 'react';
 import { Card, CardContent, Typography, Button, CardActions, styled } from '@mui/material';
 import { CarCardProps } from './types';
 import carImage from '../../../../assets/images/car image.webp';
-import LocationOnIcon from '@mui/icons-material/LocationOn'; // Import LocationOnIcon
-import DateRangeIcon from '@mui/icons-material/DateRange'; // Import DateRangeIcon
+
 
 const StyledCard = styled(Card)({
   maxWidth: 345,
@@ -59,8 +58,7 @@ const CarCard: React.FC<CarCardProps> = ({ vehicle_image, rental_rate, availabil
         <Button size="small" color="primary" onClick={onBookClick}>
           Book
         </Button>
-        <LocationOnIcon /> {/* Example usage of LocationOnIcon */}
-        <DateRangeIcon /> {/* Example usage of DateRangeIcon */}
+       
       </CardActions>
     </StyledCard>
   );
