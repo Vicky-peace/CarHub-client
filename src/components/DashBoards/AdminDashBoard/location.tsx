@@ -1,85 +1,97 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Snackbar, Table, TableBody,
-  TableCell, TableContainer, TableHead, TableRow, TextField, Typography
+  Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
+  Dialog, DialogActions, DialogContent, TextField, Snackbar, Alert, CircularProgress
 } from '@mui/material';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import { useFetchLocationsQuery, useAddLocationMutation, useUpdateLocationMutation, useDeleteLocationMutation } from './Slices/locationapi';
+import {
+  useFetchLocationsQuery, useAddLocationMutation, useUpdateLocationMutation, useDeleteLocationMutation
+} from './Slices/locationapi'; // Adjust import as necessary
+import { Location } from './types';
 
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+type LocationForCreation = Omit<Location, 'location_id'>;
 
 const Locations: React.FC = () => {
-  const { data: locations, error, isLoading, refetch } = useFetchLocationsQuery();
+  const { data: locations, error, isLoading: isLocationsLoading, refetch } = useFetchLocationsQuery();
   const [addLocation, { isLoading: isAddLocationLoading }] = useAddLocationMutation();
   const [updateLocation, { isLoading: isUpdateLocationLoading }] = useUpdateLocationMutation();
   const [deleteLocation, { isLoading: isDeleteLocationLoading }] = useDeleteLocationMutation();
 
-  const [openAddDialog, setOpenAddDialog] = useState(false);
-  const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editingLocation, setEditingLocation] = useState<any>(null); // Use appropriate type based on your location type
+  const [open, setOpen] = useState(false);
+  const [editingLocation, setEditingLocation] = useState<Partial<LocationForCreation> | null>(null);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [severity, setSeverity] = useState<'success' | 'error'>('success');
+  const [loading, setLoading] = useState(false);
 
-  const handleOpenAddDialog = () => {
-    setEditingLocation(null);
-    setOpenAddDialog(true);
+  const handleOpen = (location?: Location) => {
+    if (location) {
+      setEditingLocation(location);
+    } else {
+      setEditingLocation({ name: '', contact_phone: '', address: '' });
+    }
+    setOpen(true);
   };
 
-  const handleOpenEditDialog = (location: any) => {
-    setEditingLocation(location);
-    setOpenEditDialog(true);
-  };
-
-  const handleCloseAddDialog = () => {
-    setOpenAddDialog(false);
-    setEditingLocation(null);
-  };
-
-  const handleCloseEditDialog = () => {
-    setOpenEditDialog(false);
+  const handleClose = () => {
+    setOpen(false);
     setEditingLocation(null);
   };
 
-  const handleSaveLocation = async () => {
-    try {
-      if (editingLocation) {
-        if (editingLocation.location_id) {
-          await updateLocation(editingLocation).unwrap();
-          setSnackbarMessage('Location updated successfully');
+  const handleSave = async () => {
+    if (editingLocation) {
+      setLoading(true);
+      try {
+        if ('location_id' in editingLocation && editingLocation.location_id !== undefined) {
+          // Editing existing location
+          const { location_id, ...locationWithoutId } = editingLocation;
+          await updateLocation(locationWithoutId as Location).unwrap();
+          setSnackbarMessage('Location updated successfully!');
         } else {
-          await addLocation(editingLocation).unwrap();
-          setSnackbarMessage('Location added successfully');
+          // Adding new location
+          await addLocation(editingLocation as LocationForCreation).unwrap();
+          setSnackbarMessage('Location added successfully!');
         }
-        setSeverity('success');
         setSnackbarOpen(true);
+        handleClose();
         await refetch();
-        handleCloseAddDialog();
-        handleCloseEditDialog();
+      } catch (error: any) {
+        console.error('Failed to save location:', error);
+        // Check if error is of type object with 'data' property
+        if (typeof error === 'object' && error !== null && 'data' in error) {
+          // Log server response
+          console.error('Server responded with:', error.data);
+          // Handle specific error messages from server
+          let errorMessage = 'Failed to save location';
+          if (typeof error.data === 'string') {
+            errorMessage = error.data; // Handle string error message directly
+          } else if (error.data.error) {
+            errorMessage = error.data.error; // Handle nested error object
+          }
+          setSnackbarMessage(errorMessage);
+        } else {
+          setSnackbarMessage('Failed to save location');
+        }
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Failed to save location:', error);
-      setSnackbarMessage('Failed to save location');
-      setSeverity('error');
-      setSnackbarOpen(true);
     }
   };
-
-  const handleDeleteLocation = async (locationId: number) => {
+  
+  
+  const handleDelete = async (location_id: number) => {
+    setLoading(true);
     try {
-      await deleteLocation(locationId).unwrap();
-      setSnackbarMessage('Location deleted successfully');
-      setSeverity('success');
+      await deleteLocation(location_id).unwrap();
+      setSnackbarMessage('Location deleted successfully!');
       setSnackbarOpen(true);
       await refetch();
     } catch (error) {
       console.error('Failed to delete location:', error);
       setSnackbarMessage('Failed to delete location');
-      setSeverity('error');
       setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -91,11 +103,13 @@ const Locations: React.FC = () => {
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
       <Typography variant="h4">Manage Locations</Typography>
-      <Button variant="contained" color="primary" sx={{ my: 2 }} onClick={handleOpenAddDialog} disabled={isLoading}>
-        Add Location
+      <Button variant="contained" color="primary" sx={{ my: 2 }} onClick={() => handleOpen()} disabled={loading}>
+        {isAddLocationLoading ? <CircularProgress size={24} /> : 'Add Location'}
       </Button>
-      {isLoading ? (
-        <Typography>Loading...</Typography>
+      {isLocationsLoading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
+        </Box>
       ) : error ? (
         <Typography>Error loading locations</Typography>
       ) : (
@@ -111,16 +125,18 @@ const Locations: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {locations?.map((location: any) => (
+              {locations?.map((location) => (
                 <TableRow key={location.location_id}>
                   <TableCell>{location.location_id}</TableCell>
                   <TableCell>{location.name}</TableCell>
                   <TableCell>{location.contact_phone}</TableCell>
                   <TableCell>{location.address}</TableCell>
                   <TableCell>
-                    <Button variant="contained" color="primary" onClick={() => handleOpenEditDialog(location)}>Edit</Button>
-                    <Button variant="contained" color="error" onClick={() => handleDeleteLocation(location.location_id)} disabled={isDeleteLocationLoading}>
-                      Delete
+                    <Button onClick={() => handleOpen(location)} disabled={loading}>
+                      {isUpdateLocationLoading ? <CircularProgress size={24} /> : 'Edit'}
+                    </Button>
+                    <Button onClick={() => handleDelete(location.location_id)} disabled={loading}>
+                      {isDeleteLocationLoading ? <CircularProgress size={24} /> : 'Delete'}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -129,80 +145,42 @@ const Locations: React.FC = () => {
           </Table>
         </TableContainer>
       )}
-
-      {/* Add Location Dialog */}
-      <Dialog open={openAddDialog} onClose={handleCloseAddDialog}>
-        <DialogTitle>Add Location</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Name"
-            fullWidth
-            value={editingLocation?.name || ''}
-            onChange={(e) => setEditingLocation({ ...editingLocation, name: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="Contact Phone"
-            fullWidth
-            value={editingLocation?.contact_phone || ''}
-            onChange={(e) => setEditingLocation({ ...editingLocation, contact_phone: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="Address"
-            fullWidth
-            value={editingLocation?.address || ''}
-            onChange={(e) => setEditingLocation({ ...editingLocation, address: e.target.value })}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseAddDialog} color="primary" disabled={isAddLocationLoading}>Cancel</Button>
-          <Button onClick={handleSaveLocation} color="primary" disabled={isAddLocationLoading}>
-            {isAddLocationLoading ? 'Saving...' : 'Save'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Edit Location Dialog */}
-      <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
-        <DialogTitle>Edit Location</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Name"
-            fullWidth
-            value={editingLocation?.name || ''}
-            onChange={(e) => setEditingLocation({ ...editingLocation, name: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="Contact Phone"
-            fullWidth
-            value={editingLocation?.contact_phone || ''}
-            onChange={(e) => setEditingLocation({ ...editingLocation, contact_phone: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            label="Address"
-            fullWidth
-            value={editingLocation?.address || ''}
-            onChange={(e) => setEditingLocation({ ...editingLocation, address: e.target.value })}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseEditDialog} color="primary" disabled={isUpdateLocationLoading}>Cancel</Button>
-          <Button onClick={handleSaveLocation} color="primary" disabled={isUpdateLocationLoading}>
-            {isUpdateLocationLoading ? 'Saving...' : 'Save'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Snackbar for notifications */}
+      {editingLocation && (
+        <Dialog open={open} onClose={handleClose}>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Name"
+              fullWidth
+              value={editingLocation?.name || ''}
+              onChange={(e) => setEditingLocation({ ...editingLocation, name: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Contact Phone"
+              fullWidth
+              value={editingLocation?.contact_phone || ''}
+              onChange={(e) => setEditingLocation({ ...editingLocation, contact_phone: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Address"
+              fullWidth
+              value={editingLocation?.address || ''}
+              onChange={(e) => setEditingLocation({ ...editingLocation, address: e.target.value })}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary" disabled={loading}>Cancel</Button>
+            <Button onClick={handleSave} color="primary" disabled={loading}>
+              {isUpdateLocationLoading || isAddLocationLoading ? <CircularProgress size={24} /> : 'Save'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity={severity}>
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>
