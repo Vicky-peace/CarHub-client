@@ -1,11 +1,19 @@
 // types.ts
-
 export interface User {
-    id: string;
-    username: string;
-    email: string;
-    role: string; // 'admin' or 'user'
-  }
+  user_id: number;
+  username: string;
+  full_name: string;
+  email: string;
+  contact_phone?: string;
+  address?: string;
+  role: string;
+  created_at?: string;
+  updated_at?: string;
+  password: string;
+  
+}
+
+
   
   export interface Vehicle {
     id: number;
