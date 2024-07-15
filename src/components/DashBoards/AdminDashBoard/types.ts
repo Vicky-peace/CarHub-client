@@ -1,7 +1,7 @@
 // types.ts
 
 export interface User {
-    id: number;
+    id: string;
     username: string;
     email: string;
     role: string; // 'admin' or 'user'

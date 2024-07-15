@@ -14,18 +14,38 @@ export const usersApi = createApi({
     }),
     addUser: builder.mutation<User, Partial<User>>({
       query: (newUser) => ({
-        url: 'api/users',
+        url: '/api/users',
         method: 'POST',
         body: newUser,
       }),
       invalidatesTags: ['User'],
     }),
-    // Add other user-related endpoints here
+    updateUser: builder.mutation<User, Partial<User>>({
+      query: ({ id, ...patch }) => ({
+        url: `/api/users/${id}`,
+        method: 'PATCH',
+        body: patch,
+      }),
+      invalidatesTags: ['User'],
+    }),
+    deleteUser: builder.mutation<{ success: boolean; id: number }, number>({
+      query: (id) => ({
+        url: `/api/users/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
 });
 
+
+
 type UseFetchUsersQuery = typeof usersApi.endpoints.fetchUsers.useQuery;
 type UseAddUserMutation = typeof usersApi.endpoints.addUser.useMutation;
+type UseUpdateUserMutation = typeof usersApi.endpoints.updateUser.useMutation;
+type UseDeleteUserMutation = typeof usersApi.endpoints.deleteUser.useMutation;
 
 export const useFetchUsersQuery: UseFetchUsersQuery = usersApi.endpoints.fetchUsers.useQuery;
 export const useAddUserMutation: UseAddUserMutation = usersApi.endpoints.addUser.useMutation;
+export const useUpdateUserMutation: UseUpdateUserMutation = usersApi.endpoints.updateUser.useMutation;
+export const useDeleteUserMutation: UseDeleteUserMutation = usersApi.endpoints.deleteUser.useMutation;
