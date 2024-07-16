@@ -17,7 +17,7 @@ const Locations: React.FC = () => {
   const [deleteLocation, { isLoading: isDeleteLocationLoading }] = useDeleteLocationMutation();
 
   const [open, setOpen] = useState(false);
-  const [editingLocation, setEditingLocation] = useState<Partial<LocationForCreation> | null>(null);
+  const [editingLocation, setEditingLocation] = useState<Partial<Location> | null>(null);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -41,10 +41,9 @@ const Locations: React.FC = () => {
     if (editingLocation) {
       setLoading(true);
       try {
-        if ('location_id' in editingLocation && editingLocation.location_id !== undefined) {
+        if (editingLocation.location_id !== undefined) {
           // Editing existing location
-          const { location_id, ...locationWithoutId } = editingLocation;
-          await updateLocation(locationWithoutId as Location).unwrap();
+          await updateLocation(editingLocation as Location).unwrap();
           setSnackbarMessage('Location updated successfully!');
         } else {
           // Adding new location
@@ -56,16 +55,13 @@ const Locations: React.FC = () => {
         await refetch();
       } catch (error: any) {
         console.error('Failed to save location:', error);
-        // Check if error is of type object with 'data' property
         if (typeof error === 'object' && error !== null && 'data' in error) {
-          // Log server response
           console.error('Server responded with:', error.data);
-          // Handle specific error messages from server
           let errorMessage = 'Failed to save location';
           if (typeof error.data === 'string') {
-            errorMessage = error.data; // Handle string error message directly
+            errorMessage = error.data;
           } else if (error.data.error) {
-            errorMessage = error.data.error; // Handle nested error object
+            errorMessage = error.data.error;
           }
           setSnackbarMessage(errorMessage);
         } else {
@@ -77,8 +73,7 @@ const Locations: React.FC = () => {
       }
     }
   };
-  
-  
+
   const handleDelete = async (location_id: number) => {
     setLoading(true);
     try {
