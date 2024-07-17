@@ -1,4 +1,4 @@
-import React, { useState,  } from 'react';
+import React, { useState } from 'react';
 import {
   Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
   Dialog, DialogActions, DialogContent, TextField, Snackbar, Alert, CircularProgress
@@ -119,11 +119,21 @@ const ManageUsers: React.FC = () => {
                   <TableCell>{user.address}</TableCell>
                   <TableCell>{user.role}</TableCell>
                   <TableCell>
-                    <Button onClick={() => handleOpen(user)} disabled={loading}>
-                      {isUpdateUserLoading ? <CircularProgress size={24} /> : 'Edit'}
+                    <Button
+                      onClick={() => handleOpen(user)}
+                      variant="outlined"
+                      sx={{ color: 'green', borderColor: 'green', mr: 1 }}
+                      disabled={loading}
+                    >
+                      {isUpdateUserLoading ? <CircularProgress size={22} /> : 'Edit'}
                     </Button>
-                    <Button onClick={() => handleDelete(user.user_id)} disabled={loading}>
-                      {isDeleteUserLoading ? <CircularProgress size={24} /> : 'Delete'}
+                    <Button
+                      onClick={() => handleDelete(user.user_id)}
+                      variant="outlined"
+                      sx={{ color: 'red', borderColor: 'red' }}
+                      disabled={loading}
+                    >
+                      {isDeleteUserLoading ? <CircularProgress size={22} /> : 'Delete'}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -182,8 +192,8 @@ const ManageUsers: React.FC = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary" disabled={loading}>Cancel</Button>
-            <Button onClick={handleSave} color="primary" disabled={loading}>
-              {isUpdateUserLoading || isAddUserLoading ? <CircularProgress size={24} /> : 'Save'}
+            <Button onClick={handleSave} color="primary" disabled={loading || isAddUserLoading || isUpdateUserLoading}>
+              {loading ? <CircularProgress size={24} /> : 'Save'}
             </Button>
           </DialogActions>
         </Dialog>

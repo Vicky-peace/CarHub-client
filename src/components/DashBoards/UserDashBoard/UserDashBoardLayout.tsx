@@ -10,8 +10,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 
 import MyTickets from './Mytickets';
 import NewTicket from './NewTicket';
-import BookedVehicles from './BookedVehicles';
-import BookVehicle from './bookvehicle';
+import BookedVehicles from './BookTheVehicles';
+import BookVehicle from './bookedvehicles';
 
 const drawerWidth = 240;
 

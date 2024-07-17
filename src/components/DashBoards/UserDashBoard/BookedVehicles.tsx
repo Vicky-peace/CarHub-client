@@ -1,216 +1,287 @@
-import React, { useState, useEffect } from 'react';
-import { CarCardProps } from './Slices/types';
-import CarCard from './Slices/carcard';
-import { useGetCombinedVehiclesWithSpecificationsQuery } from './Slices/apislice';
-import { ClipLoader } from 'react-spinners';
+import React, { useState } from 'react';
 import {
-  Dialog, DialogTitle,DialogContent, DialogActions, Button, TextField, Box,
-  Typography, Snackbar, FormControl,InputLabel, Select, MenuItem,
+  Container, Typography, TextField, Button, Grid, Card, CardContent, CardActions,
+  CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress
 } from '@mui/material';
-import { CheckCircle, ErrorOutline } from '@mui/icons-material';
-import carImage from '../../../assets/images/car image.webp';
-import { styled } from '@mui/system'; 
+import { makeStyles } from '@mui/styles';
+import car1 from '../../../images/car image.webp';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // Importing the green tick icon
+import { usePostBookingMutation } from './Slices/bookingsApi'; // Importing the mutation hook
 
-const StyledCarCard = styled('div')(() => ({
-  transition: 'transform 0.3s, box-shadow 0.3s',
-  '&:hover': {
-    transform: 'scale(1.05)',
-    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+const initialCars = [
+  { id: '1', name: 'Car A', description: 'Description A', rate: 100, numberPlate: 'XYZ123', image: car1, booked: false },
+  { id: '2', name: 'Car B', description: 'Description B', rate: 150, numberPlate: 'ABC456', image: car1, booked: false },
+  { id: '3', name: 'Car C', description: 'Description C', rate: 200, numberPlate: 'DEF789', image: car1, booked: false },
+  { id: '4', name: 'Car D', description: 'Description D', rate: 250, numberPlate: 'GHI012', image: car1, booked: false },
+  { id: '5', name: 'Car E', description: 'Description E', rate: 300, numberPlate: 'JKL345', image: car1, booked: false },
+  { id: '6', name: 'Car F', description: 'Description F', rate: 350, numberPlate: 'MNO678', image: car1, booked: false },
+  { id: '7', name: 'Car G', description: 'Description G', rate: 400, numberPlate: 'PQR901', image: car1, booked: false },
+  { id: '8', name: 'Car H', description: 'Description H', rate: 450, numberPlate: 'STU234', image: car1, booked: false },
+];
+
+const useStyles = makeStyles({
+  card: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+    transition: 'transform 0.3s ease-in-out',
+    '&:hover': {
+      transform: 'scale(1.05)',
+    },
   },
-}));
+  cardMedia: {
+    height: 150,
+    objectFit: 'cover',
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+  successMessage: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  successIcon: {
+    color: 'green',
+    marginRight: 10,
+  },
+});
 
-const VehicleList: React.FC = () => {
-  const { data: combinedData, error, isLoading } = useGetCombinedVehiclesWithSpecificationsQuery();
-  const [selectedVehicle, setSelectedVehicle] = useState<CarCardProps | null>(null);
-  const [bookingFormOpen, setBookingFormOpen] = useState(false);
-  const [bookingSuccess, setBookingSuccess] = useState(false); 
-  const [bookingError, setBookingError] = useState<string | null>(null); 
-  const [pickupDate, setPickupDate] = useState <string>('');
-  const [returnDate, setReturnDate] = useState<string>('');
-  const [locations, setLocations] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState('');
+const BookVehicle: React.FC = () => {
+  const classes = useStyles();
+  const [form, setForm] = useState({
+    booking_id: '',
+    user_id: '',
+    vehicle_id: '',
+    location_id: '',
+    booking_date: '',
+    return_date: '',
+    total_amount: '',
+  });
+  const [selectedCarId, setSelectedCarId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false); 
+  const [cars, setCars] = useState(initialCars); 
+  const [postBooking, { isLoading: isBookingLoading }] = usePostBookingMutation(); // Using the mutation hook
 
-  useEffect(() => {
-    fetchLocations();
-  }, []);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const fetchLocations = async () => {
+  const handleSubmit = async () => {
+    setLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/locations');
-      if (!response.ok) {
-        throw new Error('Failed to fetch locations');
-      }
-      const locationsData = await response.json();
-      setLocations(locationsData);
-    } catch (error) {
-      console.error('Error fetching locations:', error);
-    }
-  };
-
-  const handleBookButtonClick = (vehicle: CarCardProps) => {
-    setSelectedVehicle(vehicle);
-    setBookingFormOpen(true);
-  };
-
-  const handleCloseBookingForm = () => {
-    setBookingFormOpen(false);
-    setSelectedVehicle(null);
-    setBookingError(null); // Clear any previous error
-    setPickupDate('');
-    setReturnDate('');
-    setSelectedLocation('');
-  };
-
-  const handleBookingSubmit = async () => {
-    setBookingError(null); // Clear previous errors
-    try {
-      const response = await fetch('http://localhost:8000/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          vehicleId: selectedVehicle?.vehicle_id,
-          pickupDate,
-          returnDate,
-          locationId: selectedLocation,
-        }),
+      console.log('Submitting booking with form data:', form);
+      const response = await postBooking(form).unwrap();
+      console.log('Booking successfully submitted:', response);
+      setIsSuccess(true); // Show success message on successful booking
+      markCarAsBooked(form.vehicle_id); // Mark the booked car visually
+      // Optionally, reset form state or perform other actions after submission
+      setForm({
+        booking_id: '',
+        user_id: '',
+        vehicle_id: '',
+        location_id: '',
+        booking_date: '',
+        return_date: '',
+        total_amount: '',
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to book vehicle'); // Handle non-200 responses
-      }
-
-      setBookingSuccess(true);
-
-      handleCloseBookingForm();
-    } catch (error: any) {
-      console.error('Error submitting booking:', error);
-      setBookingError(error.message || 'Failed to book vehicle'); 
+    } catch (error) {
+      console.error('Failed to submit booking:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (isLoading)
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <ClipLoader color="#f00" size={150} />
-      </div>
+  const handleBook = (carId: string) => {
+    setSelectedCarId(carId);
+    setForm((prev) => ({ ...prev, vehicle_id: carId }));
+  };
+
+  const markCarAsBooked = (carId: string) => {
+    setCars((prevCars) =>
+      prevCars.map((car) =>
+        car.id === carId ? { ...car, booked: true } : car
+      )
     );
-  if (error) return <div>Error: Error Fetching</div>;
+  };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
-        {combinedData?.map((car: CarCardProps) => (
-          <StyledCarCard key={car.vehicle_id}>
-            <CarCard
-              vehicle_id={car.vehicle_id}
-              vehicle_image={car.vehicle_image}
-              rental_rate={car.rental_rate}
-              availability={car.availability}
-              vehicleSpec={car.vehicleSpec}
-              onBookClick={() => handleBookButtonClick(car)}
-            />
-          </StyledCarCard>
-        ))}
-      </div>
-
-      <Dialog open={bookingFormOpen} onClose={handleCloseBookingForm}>
-        <DialogTitle>Book Vehicle</DialogTitle>
-        <DialogContent>
-          {selectedVehicle && (
-            <Box>
-              <img
-                src={selectedVehicle.vehicle_image || carImage}
-                alt="Vehicle"
-                style={{ width: '100%', height: 'auto', marginBottom: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.2)' }}
+    <Container>
+      <Typography variant="h6" gutterBottom>
+        Book a Vehicle
+      </Typography>
+      <Grid container spacing={3}>
+        {cars.map((car) => (
+          <Grid item xs={12} sm={6} md={4} key={car.id}>
+            <Card className={classes.card}>
+              <CardMedia
+                component="img"
+                className={classes.cardMedia}
+                image={car.image}
+                alt={car.name}
               />
-              <Typography variant="h6" gutterBottom>
-                {selectedVehicle.vehicleSpec?.manufacturer} {selectedVehicle.vehicleSpec?.model}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Rental Rate: {selectedVehicle.rental_rate}
-              </Typography>
-              <Typography variant="body2">Year: {selectedVehicle.vehicleSpec?.year}</Typography>
-              <Typography variant="body2">Fuel Type: {selectedVehicle.vehicleSpec?.fuel_type}</Typography>
-              <Typography variant="body2">Engine Capacity: {selectedVehicle.vehicleSpec?.engine_capacity}</Typography>
-              <Typography variant="body2">Transmission: {selectedVehicle.vehicleSpec?.transmission}</Typography>
-              <Typography variant="body2">Seating Capacity: {selectedVehicle.vehicleSpec?.seating_capacity}</Typography>
-              <Typography variant="body2">Color: {selectedVehicle.vehicleSpec?.color}</Typography>
-              <Typography variant="body2">Features: {selectedVehicle.vehicleSpec?.features}</Typography>
-              <FormControl fullWidth style={{ marginTop: '10px' }}>
-                <InputLabel id="location-label">Location</InputLabel>
-                <Select
-                  labelId="location-label"
-                  id="location"
-                  value={selectedLocation}
-                  onChange={(e) => setSelectedLocation(e.target.value as string)}
+              <CardContent className={classes.cardContent}>
+                <Typography variant="h6">{car.name}</Typography>
+                <Typography>Description: {car.description}</Typography>
+                <Typography>Rate: ${car.rate}/day</Typography>
+                <Typography>Number Plate: {car.numberPlate}</Typography>
+                {car.booked && (
+                  <Typography style={{ color: 'green' }}>Booked</Typography>
+                )}
+              </CardContent>
+              <CardActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleBook(car.id)}
+                  disabled={car.booked} // Disable booking button if car is already booked
                 >
-                  {locations.map((location: any) => (
-                    <MenuItem key={location.location_id} value={location.location_id}>
-                      {location.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <TextField
-                margin="dense"
-                label="Pickup Date"
-                fullWidth
-                type="date"
-                value={pickupDate}
-                onChange={(e) => setPickupDate(e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                style={{ marginTop: '10px' }}
-              />
-              <TextField
-                margin="dense"
-                label="Return Date"
-                fullWidth
-                type="date"
-                value={returnDate}
-                onChange={(e) => setReturnDate(e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                style={{ marginTop: '10px' }}
-              />
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseBookingForm} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleBookingSubmit} color="primary">
-            Book
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Snackbar
-        open={bookingSuccess}
-        autoHideDuration={6000}
-        onClose={() => setBookingSuccess(false)}
-        message="Booking Successful"
-        action={
-          <React.Fragment>
-            <CheckCircle sx={{ color: 'green' }} />
-          </React.Fragment>
-        }
-        style={{ marginBottom: '20px' }}
-      />
-
-      <Snackbar
-        open={!!bookingError}
-        autoHideDuration={6000}
-        onClose={() => setBookingError(null)}
-        message={bookingError || 'Failed to book vehicle'}
-        action={
-          <React.Fragment>
-            <ErrorOutline sx={{ color: 'red' }} />
-          </React.Fragment>
-        }
-        style={{ marginBottom: '20px' }}
-      />
-    </div>
+                  {car.booked ? 'Booked' : 'Book'}
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+      {selectedCarId && (
+        <Dialog open={!!selectedCarId} onClose={() => setSelectedCarId(null)} aria-labelledby="booking-dialog-title">
+          <DialogTitle id="booking-dialog-title">Booking Form</DialogTitle>
+          <DialogContent>
+            <form noValidate autoComplete="off">
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    name="booking_id"
+                    label="Booking ID"
+                    fullWidth
+                    value={form.booking_id}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    name="user_id"
+                    label="User ID"
+                    fullWidth
+                    value={form.user_id}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    name="vehicle_id"
+                    label="Vehicle ID"
+                    fullWidth
+                    value={form.vehicle_id}
+                    onChange={handleChange}
+                    InputProps={{
+                      readOnly: true,
+                      startAdornment: (
+                        <MonetizationOnIcon color="action" />
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    name="location_id"
+                    label="Location ID"
+                    fullWidth
+                    value={form.location_id}
+                    onChange={handleChange}
+                    InputProps={{
+                      readOnly: false,
+                      startAdornment: (
+                        <LocationOnIcon color="action" />
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    name="booking_date"
+                    label="Booking Date"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                    value={form.booking_date}
+                    onChange={handleChange}
+                    InputProps={{
+                      readOnly: false,
+                      startAdornment: (
+                        <DateRangeIcon color="action" />
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    name="return_date"
+                    label="Return Date"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                    value={form.return_date}
+                    onChange={handleChange}
+                    InputProps={{
+                      readOnly: false,
+                      startAdornment: (
+                        <DateRangeIcon color="action" />
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    name="total_amount"
+                    label="Total Amount"
+                    type="number"
+                    fullWidth
+                    value={form.total_amount}
+                    onChange={handleChange}
+                    InputProps={{
+                      readOnly: false,
+                      startAdornment: (
+                        <MonetizationOnIcon color="action" />
+                      ),
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setSelectedCarId(null)}>Cancel</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              disabled={loading || isBookingLoading}
+            >
+              {loading || isBookingLoading ? (
+                <CircularProgress size={24} />
+              ) : (
+                'Submit Booking'
+              )}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+      {isSuccess && (
+        <div className={classes.successMessage}>
+          <CheckCircleIcon className={classes.successIcon} />
+          <Typography variant="body1">Booking Successful!</Typography>
+        </div>
+      )}
+    </Container>
   );
 };
 
-export default VehicleList;
+export default BookVehicle;

@@ -11,8 +11,8 @@ import SignUp from './components/Registration/RegisterForm';
 import DashboardLayout from './components/DashBoards/UserDashBoard/UserDashBoardLayout';
 
 import Dashboard from './components/DashBoards/UserDashBoard/Dashboard';
-import BookVehicle from './components/DashBoards/UserDashBoard/bookvehicle';
-import BookedVehicles from './components/DashBoards/UserDashBoard/BookedVehicles';
+import BookVehicle from './components/DashBoards/UserDashBoard/bookedvehicles';
+import BookedVehicles from './components/DashBoards/UserDashBoard/BookTheVehicles';
 import MyTickets from './components/DashBoards/UserDashBoard/Mytickets';
 import NewTicket from './components/DashBoards/UserDashBoard/NewTicket';
 import ManageVehicles from './components/DashBoards/AdminDashBoard/managevehicle';

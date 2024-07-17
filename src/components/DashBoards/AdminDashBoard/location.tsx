@@ -8,7 +8,7 @@ import {
 } from './Slices/locationapi'; // Adjust import as necessary
 import { Location } from './types';
 
-type LocationForCreation = Omit<Location, 'location_id'>;
+type LocationForCreation = Omit<Location, 'location_id' | 'contact_phone'>;
 
 const Locations: React.FC = () => {
   const { data: locations, error, isLoading: isLocationsLoading, refetch } = useFetchLocationsQuery();
@@ -17,17 +17,19 @@ const Locations: React.FC = () => {
   const [deleteLocation, { isLoading: isDeleteLocationLoading }] = useDeleteLocationMutation();
 
   const [open, setOpen] = useState(false);
-  const [editingLocation, setEditingLocation] = useState<Partial<Location> | null>(null);
+  const [editingLocation, setEditingLocation] = useState<Partial<LocationForCreation> | null>(null);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const DEFAULT_CONTACT_PHONE = 'N/A'; // Set a default contact phone
+
   const handleOpen = (location?: Location) => {
     if (location) {
       setEditingLocation(location);
     } else {
-      setEditingLocation({ name: '', contact_phone: '', address: '' });
+      setEditingLocation({ name: '', address: '' });
     }
     setOpen(true);
   };
@@ -41,13 +43,15 @@ const Locations: React.FC = () => {
     if (editingLocation) {
       setLoading(true);
       try {
-        if (editingLocation.location_id !== undefined) {
+        if ('location_id' in editingLocation && editingLocation.location_id !== undefined) {
           // Editing existing location
-          await updateLocation(editingLocation as Location).unwrap();
+          const updatedLocation = { ...editingLocation, contact_phone: DEFAULT_CONTACT_PHONE };
+          await updateLocation(updatedLocation as Location).unwrap();
           setSnackbarMessage('Location updated successfully!');
         } else {
           // Adding new location
-          await addLocation(editingLocation as LocationForCreation).unwrap();
+          const newLocation = { ...editingLocation, contact_phone: DEFAULT_CONTACT_PHONE };
+          await addLocation(newLocation as LocationForCreation).unwrap();
           setSnackbarMessage('Location added successfully!');
         }
         setSnackbarOpen(true);
@@ -98,7 +102,13 @@ const Locations: React.FC = () => {
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
       <Typography variant="h4">Manage Locations</Typography>
-      <Button variant="contained" color="primary" sx={{ my: 2 }} onClick={() => handleOpen()} disabled={loading}>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ my: 2 }}
+        onClick={() => handleOpen()}
+        disabled={loading}
+      >
         {isAddLocationLoading ? <CircularProgress size={24} /> : 'Add Location'}
       </Button>
       {isLocationsLoading ? (
@@ -127,10 +137,22 @@ const Locations: React.FC = () => {
                   <TableCell>{location.contact_phone}</TableCell>
                   <TableCell>{location.address}</TableCell>
                   <TableCell>
-                    <Button onClick={() => handleOpen(location)} disabled={loading}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleOpen(location)}
+                      disabled={loading}
+                      sx={{ mr: 1 }}
+                    >
                       {isUpdateLocationLoading ? <CircularProgress size={24} /> : 'Edit'}
                     </Button>
-                    <Button onClick={() => handleDelete(location.location_id)} disabled={loading}>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => handleDelete(location.location_id)}
+                      disabled={loading}
+                      sx={{ mr: 1 }}
+                    >
                       {isDeleteLocationLoading ? <CircularProgress size={24} /> : 'Delete'}
                     </Button>
                   </TableCell>
@@ -150,13 +172,6 @@ const Locations: React.FC = () => {
               fullWidth
               value={editingLocation?.name || ''}
               onChange={(e) => setEditingLocation({ ...editingLocation, name: e.target.value })}
-            />
-            <TextField
-              margin="dense"
-              label="Contact Phone"
-              fullWidth
-              value={editingLocation?.contact_phone || ''}
-              onChange={(e) => setEditingLocation({ ...editingLocation, contact_phone: e.target.value })}
             />
             <TextField
               margin="dense"

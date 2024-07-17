@@ -1,25 +1,25 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { CarCardProps, VehicleSpec } from './types';
 
-const BASE_URL = 'http://localhost:8000/api';
+const BASE_URL = 'http://localhost:8000';
 
 
 export const vehiclesApi = createApi({
   reducerPath: 'vehiclesApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
-  tagTypes: ['Vehicle', 'VehicleSpecs'], // Define all tag types used in endpoints
+  tagTypes: ['Vehicle', 'VehicleSpecs'], 
   endpoints: (builder) => ({
     getVehicles: builder.query<CarCardProps[], void>({
-      query: () => '/vehiclecombined',
-      providesTags: ['Vehicle'], // Tag type for vehicles endpoint
+      query: () => '/api/combined',
+      providesTags: ['Vehicle'], 
     }),
     getVehicleSpecs: builder.query<VehicleSpec[], void>({
       query: () => '/vehiclespecs',
-      providesTags: ['VehicleSpecs'], // Tag type for vehicle specs endpoint
+      providesTags: ['VehicleSpecs'], 
     }),
     getCombinedVehiclesWithSpecifications: builder.query<CarCardProps[], void>({
-      query: () => '/vehiclecombined',
-      providesTags: ['Vehicle', 'VehicleSpecs'], // Combine tag types for caching purposes
+      query: () => '/api/combined',
+      providesTags: ['Vehicle', 'VehicleSpecs'], 
     }),
   }),
 });
