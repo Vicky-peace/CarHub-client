@@ -13,8 +13,6 @@ export interface Booking {
   total_amount: string;
 }
 
-
-
 export const bookingsApi = createApi({
   reducerPath: 'bookingsApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),

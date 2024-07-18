@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid, Box, Typography, Container, CircularProgress, Snackbar } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useLoginMutation } from '../../AuthApi'; // Ensure the correct path to your authApi
+import { useLoginMutation } from '../../AuthApi'; 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { green } from '@mui/material/colors';
 
@@ -16,6 +16,14 @@ function SignIn() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
+  useEffect(() => {
+    // Log the current localStorage state for debugging
+    console.log('Current localStorage state:', {
+      token: localStorage.getItem('token'),
+      user: localStorage.getItem('user'),
+    });
+  }, []);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -23,9 +31,26 @@ function SignIn() {
     const password = data.get('password') as string;
 
     try {
-      // Simulating async login process
+      console.log('Attempting login with', { username, password });
       const response = await login({ username, password }).unwrap();
-      const { role } = response;
+      
+      console.log('Login response:', response);
+
+      const { token, user } = response;
+
+      // Debug: Check if token and user are present
+      if (!token || !user) {
+        throw new Error('Token or user data missing from response');
+      }
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      // Log the new localStorage state for verification
+      console.log('Updated localStorage state:', {
+        token: localStorage.getItem('token'),
+        user: localStorage.getItem('user'),
+      });
 
       setShowSuccessMessage(true);
       setOpenSnackbar(true);
@@ -34,12 +59,12 @@ function SignIn() {
         setShowSuccessMessage(false);
         setOpenSnackbar(false);
 
-        if (role === 'admin') {
+        if (user.role === 'admin') {
           navigate('/admin/dashboard');
         } else {
           navigate('/user/dashboard');
         }
-      }, 2000); // Reset success message and close Snackbar after 2 seconds
+      }, 2000); 
     } catch (error) {
       console.error('Failed to login:', error);
       setOpenSnackbar(true);

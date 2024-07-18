@@ -4,13 +4,14 @@ import { authApi } from './AuthApi';
 import { bookingsApi } from './components/DashBoards/UserDashBoard/Slices/bookingsApi';
 import bookingsReducer from './components/DashBoards/UserDashBoard/Slices/bookingsSlice';
 import { vehiclesApi } from './components/DashBoards/UserDashBoard/Slices/apislice';
-import { ticketsApi } from './components/DashBoards/UserDashBoard/Slices/ticketsapi'; // Adjust the path as needed
+import { ticketsApi } from './components/DashBoards/UserDashBoard/Slices/ticketsapi'; 
 
 import { fleetApi } from './components/DashBoards/AdminDashBoard/Slices/fleetapi';
 import { locationsApi } from './components/DashBoards/AdminDashBoard/Slices/locationapi';
 import { supportTicketsApi } from './components/DashBoards/AdminDashBoard/Slices/supportticketapi';
 import { usersApi } from './components/DashBoards/AdminDashBoard/Slices/Userapi';
 import { vehiclesApii } from './components/DashBoards/AdminDashBoard/Slices/vehiclesapi';
+import { locationApi } from './components/DashBoards/UserDashBoard/LOCATION';
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     [supportTicketsApi.reducerPath]: supportTicketsApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
     [vehiclesApii.reducerPath]: vehiclesApii.reducer,
+    [locationApi.reducerPath]: locationApi.reducer, // Add this line
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -35,7 +37,8 @@ export const store = configureStore({
       locationsApi.middleware,
       supportTicketsApi.middleware,
       usersApi.middleware,
-      vehiclesApii.middleware
+      vehiclesApii.middleware,
+      locationApi.middleware // Add this line
     ),
 });
 

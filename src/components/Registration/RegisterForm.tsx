@@ -46,17 +46,16 @@ function SignUp() {
       console.log('Registration Response:', response);
 
       localStorage.setItem('token', token);
-      setShowSuccessMessage(true); // Set success message state
-      setOpenSnackbar(true); // Open snackbar
-
-      // Simulate timeout error after 3 seconds for demonstration
+      setShowSuccessMessage(true); 
+      setOpenSnackbar(true); 
+  
       setTimeout(() => {
         if (!showSuccessMessage) {
           setTimeoutError(true);
         }
       }, 3000);
 
-      navigate('/login'); // Redirect to login form after successful registration
+      navigate('/login'); 
     } catch (error) {
       console.error('Failed to register:', error);
     }

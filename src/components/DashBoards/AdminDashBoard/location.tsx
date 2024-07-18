@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import {
   useFetchLocationsQuery, useAddLocationMutation, useUpdateLocationMutation, useDeleteLocationMutation
-} from './Slices/locationapi'; // Adjust import as necessary
+} from './Slices/locationapi';
 import { Location } from './types';
 
 type LocationForCreation = Omit<Location, 'location_id' | 'contact_phone'>;

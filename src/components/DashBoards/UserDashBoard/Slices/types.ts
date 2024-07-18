@@ -41,3 +41,12 @@ export interface CustomerSupportTicket {
   created_at: string;
   updated_at: string;
 }
+
+export type Location ={
+  location_id: number;
+  name: string;
+  address: string;
+  contact_phone: string;
+  created_at: string;
+  updated_at: string;
+}

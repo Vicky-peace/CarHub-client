@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CarCardProps } from './Slices/types';
 import CarCard from './Slices/carcard';
 import { useGetCombinedVehiclesWithSpecificationsQuery } from './Slices/apislice';
 import { ClipLoader } from 'react-spinners';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box,
-   Snackbar, FormControl, InputLabel, Select, MenuItem,
+  Snackbar, 
 } from '@mui/material';
 import { CheckCircle, ErrorOutline } from '@mui/icons-material';
 import carImage from '../../../assets/images/car image.webp';
 import { styled } from '@mui/system';
+import  {locationApi} from './LOCATION'
 
 const StyledCarCard = styled('div')(() => ({
   transition: 'transform 0.3s, box-shadow 0.3s',
@@ -20,32 +21,18 @@ const StyledCarCard = styled('div')(() => ({
 }));
 
 const VehicleList: React.FC = () => {
+  const { data: locations } = locationApi.useGetLocationsQuery();
+  console.log(locations);
   const { data: combinedData, error, isLoading } = useGetCombinedVehiclesWithSpecificationsQuery();
   const [selectedVehicle, setSelectedVehicle] = useState<CarCardProps | null>(null);
   const [bookingFormOpen, setBookingFormOpen] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
-  const [pickupDate, setPickupDate] = useState<string>('');
-  const [returnDate, setReturnDate] = useState<string>('');
-  const [locations, setLocations] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState('');
+  const [BookingDate, setBookingDate] = useState<string>('');
+  const [returnDate, setReturnDate] = useState<string>(''); 
+  const [locationId, setLocationId] = useState<number | undefined>(undefined);
 
-  useEffect(() => {
-    fetchLocations();
-  }, []);
 
-  const fetchLocations = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/api/locations');
-      if (!response.ok) {
-        throw new Error('Failed to fetch locations');
-      }
-      const locationsData = await response.json();
-      setLocations(locationsData);
-    } catch (error) {
-      console.error('Error fetching locations:', error);
-    }
-  };
 
   const handleBookButtonClick = (vehicle: CarCardProps) => {
     if (vehicle.availability) {
@@ -60,36 +47,73 @@ const VehicleList: React.FC = () => {
     setBookingFormOpen(false);
     setSelectedVehicle(null);
     setBookingError(null);
-    setPickupDate('');
+    setBookingDate('');
     setReturnDate('');
-    setSelectedLocation('');
+    setLocationId(undefined); 
   };
 
+
+
+  
   const handleBookingSubmit = async () => {
     setBookingError(null);
+
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user.user_id;
+    console.log(userId)
+
+    if (!userId) {
+      setBookingError('User ID not found in localStorage');
+      return;
+    }
+
+    if (!selectedVehicle) {
+      setBookingError('Please select a vehicle.');
+      return;
+    }
+
+    if (locationId === undefined || isNaN(locationId)) {
+      setBookingError('Please select a valid location.');
+      return;
+    }
+  
+  console.log('Location ID:', locationId);
+
+  if (!BookingDate || !returnDate) {
+    setBookingError('Please select both pickup and return dates.');
+    return;
+  }
+
     try {
       const response = await fetch('http://localhost:8000/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          vehicleId: selectedVehicle?.vehicle_id,
-          pickupDate,
-          returnDate,
-          locationId: selectedLocation,
+          user_id: userId,
+          vehicle_id: Number(selectedVehicle.vehicle_id),
+          booking_date: formatDate(BookingDate), 
+          return_date: formatDate(returnDate), 
+          location_id: Number(locationId), 
+                  total_amount: '100'
         }),
       });
-
+ console.log(response)
       if (!response.ok) {
-        throw new Error('Failed to book vehicle');
+        const errorData = await response.text();
+        throw new Error(errorData || 'Failed to book vehicle');
       }
 
       setBookingSuccess(true);
-
       handleCloseBookingForm();
     } catch (error: any) {
       console.error('Error submitting booking:', error);
       setBookingError(error.message || 'Failed to book vehicle');
     }
+  };
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; 
   };
 
   if (isLoading)
@@ -141,28 +165,13 @@ const VehicleList: React.FC = () => {
                 InputProps={{ readOnly: true }}
                 style={{ marginBottom: '10px' }}
               />
-              <FormControl fullWidth style={{ marginBottom: '10px' }}>
-                <InputLabel id="location-label">Location</InputLabel>
-                <Select
-                  labelId="location-label"
-                  id="location"
-                  value={selectedLocation}
-                  onChange={(e) => setSelectedLocation(e.target.value)}
-                >
-                  {locations.map((location: any) => (
-                    <MenuItem key={location.id} value={location.id}>
-                      {location.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
               <TextField
                 fullWidth
-                label="Pickup Date"
+                label="Booking Date"
                 type="date"
                 InputLabelProps={{ shrink: true }}
-                value={pickupDate}
-                onChange={(e) => setPickupDate(e.target.value)}
+                value={BookingDate}
+                onChange={(e) => setBookingDate(e.target.value)}
                 style={{ marginBottom: '10px' }}
               />
               <TextField
@@ -172,7 +181,24 @@ const VehicleList: React.FC = () => {
                 InputLabelProps={{ shrink: true }}
                 value={returnDate}
                 onChange={(e) => setReturnDate(e.target.value)}
+                style={{ marginBottom: '10px' }}
               />
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Location</label>
+                <select
+  value={locationId || ''}
+  onChange={(e) => setLocationId(e.target.value !== '' ? Number(e.target.value) : undefined)}
+  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+>
+  <option value="">Select a location</option>
+  {locations?.map((location) => (
+    <option key={location.location_id} value={location.location_id}>
+      {location.name}
+    </option>
+  ))}
+</select>
+
+              </div>
             </Box>
           )}
         </DialogContent>

@@ -35,9 +35,18 @@ importers:
       axios:
         specifier: ^1.7.2
         version: 1.7.2
+      dayjs:
+        specifier: ^1.11.11
+        version: 1.11.11
+      loglevel:
+        specifier: ^1.9.1
+        version: 1.9.1
       lucide-react:
         specifier: ^0.402.0
         version: 0.402.0(react@18.3.1)
+      persist:
+        specifier: ^0.2.7
+        version: 0.2.7
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -56,6 +65,9 @@ importers:
       recharts:
         specifier: ^2.12.7
         version: 2.12.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      redux:
+        specifier: ^5.0.1
+        version: 5.0.1
       sass:
         specifier: ^1.77.6
         version: 1.77.6
@@ -798,6 +810,9 @@ packages:
     resolution: {integrity: sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==}
     engines: {node: '>=8'}
 
+  async@0.1.15:
+    resolution: {integrity: sha512-AGVE6WcRsWX4QudgrVhdDUKAgCv67EwmzP3yEny/AI7/WqM+J8CStwMbGqeXC9p8ih4qota04EaMim/WvA8OCw==}
+
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
@@ -967,6 +982,13 @@ packages:
   daisyui@4.12.10:
     resolution: {integrity: sha512-jp1RAuzbHhGdXmn957Z2XsTZStXGHzFfF0FgIOZj3Wv9sH7OZgLfXTRZNfKVYxltGUOBsG1kbWAdF5SrqjebvA==}
     engines: {node: '>=16.9.0'}
+
+  dayjs@1.11.11:
+    resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
+
+  db-info@0.0.3:
+    resolution: {integrity: sha512-sDjwqY6n5QDs4Y+2YhqCvrTaKXdylzIhp7uiAFB2I1zg7jFeL875HQJAlxU7Bzt2++x48AU5/TLDNuPjBRLHdg==}
+    engines: {node: '>=0.6.0'}
 
   debug@4.3.5:
     resolution: {integrity: sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==}
@@ -1302,6 +1324,10 @@ packages:
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
 
+  generic-pool@2.0.4:
+    resolution: {integrity: sha512-xcsu0Ilg9g5C1uGgx6AriaM+3i5kSrFQ40SFjE4db27Saxq+yoI2QqMa+zmpd4xeoVmtwUD3sc9mQSaQszHuaA==}
+    engines: {node: '>= 0.2.0'}
+
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -1511,6 +1537,10 @@ packages:
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
+  loglevel@1.9.1:
+    resolution: {integrity: sha512-hP3I3kCrDIMuRwAwHltphhDM1r8i55H33GgqjXbrisuJhF4kRhW1dNuxsRklp4bXl8DSdLaNLuiL4A/LWRfxvg==}
+    engines: {node: '>= 0.6.0'}
+
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
@@ -1594,9 +1624,15 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
+  optimist@0.3.7:
+    resolution: {integrity: sha512-TCx0dXQzVtSCg2OgY/bO9hjM9cV4XYx09TVK+s3+FhkjT6LovsLe+pPMzpWf+6yXK/hUizs2gUoTw3jHM0VaTQ==}
+
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
+
+  over@0.0.5:
+    resolution: {integrity: sha512-EEc3GCT5ce2VgLYKGeomTSgQT+4wkS13Ya9XzKiskHtemWPx0YhVErn7PtiowTOsYtRlFe6FksgwFeWG1aOJdg==}
 
   p-limit@3.1.0:
     resolution: {integrity: sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==}
@@ -1639,6 +1675,10 @@ packages:
   path-type@4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
+
+  persist@0.2.7:
+    resolution: {integrity: sha512-qO0Ddk4g9Zqq1QggASJMRDUMB5y+SVVdnnGEDosxVmGZfRjHrk4Bcn8GDPReRmjsQf26Et8XBHWTEtQLYncQTQ==}
+    engines: {node: '>=0.6.0'}
 
   picocolors@1.0.1:
     resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
@@ -2049,6 +2089,10 @@ packages:
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
+
+  wordwrap@0.0.3:
+    resolution: {integrity: sha512-1tMA907+V4QmxV7dbRvb4/8MaRALK6q9Abid3ndMYnbyo8piisCmeONVqVSXqQA3KaP4SLt5b7ud6E2sqP8TFw==}
+    engines: {node: '>=0.4.0'}
 
   wrap-ansi@7.0.0:
     resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
@@ -2842,6 +2886,8 @@ snapshots:
 
   array-union@2.1.0: {}
 
+  async@0.1.15: {}
+
   asynckit@0.4.0: {}
 
   autoprefixer@10.4.19(postcss@8.4.39):
@@ -3023,6 +3069,13 @@ snapshots:
       postcss-js: 4.0.1(postcss@8.4.39)
     transitivePeerDependencies:
       - postcss
+
+  dayjs@1.11.11: {}
+
+  db-info@0.0.3:
+    dependencies:
+      async: 0.1.15
+      optimist: 0.3.7
 
   debug@4.3.5:
     dependencies:
@@ -3314,6 +3367,8 @@ snapshots:
 
   function-bind@1.1.2: {}
 
+  generic-pool@2.0.4: {}
+
   gensync@1.0.0-beta.2: {}
 
   glob-parent@5.1.2:
@@ -3516,6 +3571,8 @@ snapshots:
 
   lodash@4.17.21: {}
 
+  loglevel@1.9.1: {}
+
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
@@ -3583,6 +3640,10 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
+  optimist@0.3.7:
+    dependencies:
+      wordwrap: 0.0.3
+
   optionator@0.9.4:
     dependencies:
       deep-is: 0.1.4
@@ -3591,6 +3652,8 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
       word-wrap: 1.2.5
+
+  over@0.0.5: {}
 
   p-limit@3.1.0:
     dependencies:
@@ -3627,6 +3690,13 @@ snapshots:
       minipass: 7.1.2
 
   path-type@4.0.0: {}
+
+  persist@0.2.7:
+    dependencies:
+      async: 0.1.15
+      db-info: 0.0.3
+      generic-pool: 2.0.4
+      over: 0.0.5
 
   picocolors@1.0.1: {}
 
@@ -4011,6 +4081,8 @@ snapshots:
       isexe: 2.0.0
 
   word-wrap@1.2.5: {}
+
+  wordwrap@0.0.3: {}
 
   wrap-ansi@7.0.0:
     dependencies:
