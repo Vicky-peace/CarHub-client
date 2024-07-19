@@ -116,6 +116,10 @@ const VehicleList: React.FC = () => {
     return date.toISOString().split('T')[0]; 
   };
 
+
+  console.log('Booking Date:', BookingDate);
+  console.log('Return Date:', returnDate);
+
   if (isLoading)
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>

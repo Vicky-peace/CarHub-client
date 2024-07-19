@@ -17,6 +17,8 @@
     "@mui/styles": "^5.16.0",
     "@mui/system": "^5.16.1",
     "@reduxjs/toolkit": "^2.2.6",
+    "@stripe/react-stripe-js": "^2.7.3",
+    "@stripe/stripe-js": "^4.1.0",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.2",
     "dayjs": "^1.11.11",
