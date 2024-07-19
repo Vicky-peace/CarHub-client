@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CarCardProps } from './Slices/types';
 import CarCard from './Slices/carcard';
 import { useGetCombinedVehiclesWithSpecificationsQuery } from './Slices/apislice';
@@ -10,7 +10,7 @@ import {
 import { CheckCircle, ErrorOutline } from '@mui/icons-material';
 import carImage from '../../../assets/images/car image.webp';
 import { styled } from '@mui/system';
-import  {locationApi} from './LOCATION'
+import { locationApi } from './LOCATION';
 
 const StyledCarCard = styled('div')(() => ({
   transition: 'transform 0.3s, box-shadow 0.3s',
@@ -28,11 +28,10 @@ const VehicleList: React.FC = () => {
   const [bookingFormOpen, setBookingFormOpen] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
-  const [BookingDate, setBookingDate] = useState<string>('');
+  const [bookingDate, setBookingDate] = useState<string>('');
   const [returnDate, setReturnDate] = useState<string>(''); 
   const [locationId, setLocationId] = useState<number | undefined>(undefined);
-
-
+  const [totalAmount, setTotalAmount] = useState<number | null>(null);
 
   const handleBookButtonClick = (vehicle: CarCardProps) => {
     if (vehicle.availability) {
@@ -50,17 +49,33 @@ const VehicleList: React.FC = () => {
     setBookingDate('');
     setReturnDate('');
     setLocationId(undefined); 
+    setTotalAmount(null);
   };
 
+  const calculateNumberOfDays = (startDate: string, endDate: string): number => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const timeDiff = end.getTime() - start.getTime();
+    const daysDiff = timeDiff / (1000 * 3600 * 24);
+    return Math.ceil(daysDiff); // Use Math.ceil to round up to the nearest whole number
+  };
 
+  useEffect(() => {
+    if (selectedVehicle && bookingDate && returnDate) {
+      const numberOfDays = calculateNumberOfDays(bookingDate, returnDate);
+      const total = selectedVehicle.rental_rate * numberOfDays;
+      setTotalAmount(total);
+    } else {
+      setTotalAmount(null);
+    }
+  }, [selectedVehicle, bookingDate, returnDate]);
 
-  
   const handleBookingSubmit = async () => {
     setBookingError(null);
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const userId = user.user_id;
-    console.log(userId)
+    console.log('User ID:', userId);
 
     if (!userId) {
       setBookingError('User ID not found in localStorage');
@@ -76,13 +91,11 @@ const VehicleList: React.FC = () => {
       setBookingError('Please select a valid location.');
       return;
     }
-  
-  console.log('Location ID:', locationId);
 
-  if (!BookingDate || !returnDate) {
-    setBookingError('Please select both pickup and return dates.');
-    return;
-  }
+    if (!bookingDate || !returnDate) {
+      setBookingError('Please select both pickup and return dates.');
+      return;
+    }
 
     try {
       const response = await fetch('http://localhost:8000/api/bookings', {
@@ -91,13 +104,14 @@ const VehicleList: React.FC = () => {
         body: JSON.stringify({
           user_id: userId,
           vehicle_id: Number(selectedVehicle.vehicle_id),
-          booking_date: formatDate(BookingDate), 
+          booking_date: formatDate(bookingDate), 
           return_date: formatDate(returnDate), 
           location_id: Number(locationId), 
-                  total_amount: '100'
+          total_amount: totalAmount
         }),
       });
- console.log(response)
+
+      console.log('Response:', response);
       if (!response.ok) {
         const errorData = await response.text();
         throw new Error(errorData || 'Failed to book vehicle');
@@ -115,10 +129,6 @@ const VehicleList: React.FC = () => {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0]; 
   };
-
-
-  console.log('Booking Date:', BookingDate);
-  console.log('Return Date:', returnDate);
 
   if (isLoading)
     return (
@@ -174,7 +184,7 @@ const VehicleList: React.FC = () => {
                 label="Booking Date"
                 type="date"
                 InputLabelProps={{ shrink: true }}
-                value={BookingDate}
+                value={bookingDate}
                 onChange={(e) => setBookingDate(e.target.value)}
                 style={{ marginBottom: '10px' }}
               />
@@ -190,19 +200,27 @@ const VehicleList: React.FC = () => {
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Location</label>
                 <select
-  value={locationId || ''}
-  onChange={(e) => setLocationId(e.target.value !== '' ? Number(e.target.value) : undefined)}
-  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
->
-  <option value="">Select a location</option>
-  {locations?.map((location) => (
-    <option key={location.location_id} value={location.location_id}>
-      {location.name}
-    </option>
-  ))}
-</select>
-
+                  value={locationId || ''}
+                  onChange={(e) => setLocationId(e.target.value !== '' ? Number(e.target.value) : undefined)}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                  <option value="">Select a location</option>
+                  {locations?.map((location) => (
+                    <option key={location.location_id} value={location.location_id}>
+                      {location.name}
+                    </option>
+                  ))}
+                </select>
               </div>
+              {totalAmount !== null && (
+                <TextField
+                  fullWidth
+                  label="Total Amount"
+                  value={totalAmount}
+                  InputProps={{ readOnly: true }}
+                  style={{ marginBottom: '10px' }}
+                />
+              )}
             </Box>
           )}
         </DialogContent>
