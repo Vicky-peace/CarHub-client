@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@mui/icons-material": "^5.16.0",
     "@mui/material": "^5.16.1",
     "@mui/styles": "^5.16.0",
@@ -33,7 +34,6 @@
     "react-spinners": "^0.14.1",
     "recharts": "^2.12.7",
     "redux": "^5.0.1",
-    "sass": "^1.77.6",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
@@ -45,6 +45,7 @@
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^2.2.0",
     "autoprefixer": "^10.4.19",
+    "css-loader": "^7.1.2",
     "daisyui": "^4.12.10",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -54,6 +55,8 @@
     "postcss": "^8.4.39",
     "postcss-import": "^14.1.0",
     "prettier": "^3.3.2",
+    "sass": "^1.77.6",
+    "style-loader": "^4.0.0",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.2.2",
     "vite": "^3.2.10"

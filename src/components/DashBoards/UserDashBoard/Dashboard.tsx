@@ -1,129 +1,143 @@
-import React from 'react';
-import { Container, Grid, Paper, Typography, Box } from '@mui/material';
-import { PieChart, Pie, Tooltip, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, LineChart, Line } from 'recharts';
+import React, { useState } from 'react';
+import { Box, Typography, Button, Container, Snackbar, Alert } from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-
-const data = [
-  { name: 'Open', value: 10 },
-  { name: 'In Progress', value: 5 },
-  { name: 'Resolved', value: 15 }
-];
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
-
-const vehicleData = [
-  { name: 'Sedan', count: 20 },
-  { name: 'SUV', count: 15 },
-  { name: 'Truck', count: 10 },
-  { name: 'Van', count: 8 },
-  { name: 'Motorcycle', count: 12 }
-];
-
-const vehicleInOutData = [
-  { name: 'Jan', 'In': 30, 'Out': 25 },
-  { name: 'Feb', 'In': 35, 'Out': 30 },
-  { name: 'Mar', 'In': 40, 'Out': 35 },
-  { name: 'Apr', 'In': 45, 'Out': 40 },
-  { name: 'May', 'In': 50, 'Out': 45 },
-  { name: 'Jun', 'In': 55, 'Out': 50 },
-  { name: 'Jul', 'In': 60, 'Out': 55 },
-];
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MyTickets from './Mytickets';
+import BookVehicle from './BookTheVehicles';
+import BookedVehicles from './bookedvehicles';
+import AccountSettings from './account';
 
 const Dashboard: React.FC = () => {
+  const [activeComponent, setActiveComponent] = useState<React.ReactNode>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const handleNavigation = (component: React.ReactNode) => {
+    setActiveComponent(component);
+  };
+
+  const handleBack = () => {
+    setActiveComponent(null);
+  };
+
+  const handleSnackbarClose = () => {
+    setSuccessMessage(null);
+  };
+
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        Dashboard
-      </Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Paper style={{ padding: 16 }}>
-            <Typography variant="h6" gutterBottom>
-              Support Ticket Metrics
-            </Typography>
-            <PieChart width={400} height={400}>
-              <Pie data={data} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" dataKey="value">
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper style={{ padding: 16 }}>
-            <Typography variant="h6" gutterBottom>
-              Vehicle Distribution
-            </Typography>
-            <BarChart width={400} height={400} data={vehicleData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="count" fill="#8884d8" />
-            </BarChart>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper style={{ padding: 16 }}>
-            <Typography variant="h6" gutterBottom>
-              Monthly Bookings
-            </Typography>
-            <LineChart width={400} height={400} data={vehicleInOutData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="In" stroke="#8884d8" />
-              <Line type="monotone" dataKey="Out" stroke="#82ca9d" />
-            </LineChart>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper style={{ padding: 16 }}>
-            <Typography variant="h6" gutterBottom>
-              Revenue Overview
-            </Typography>
-            <LineChart width={400} height={400} data={vehicleInOutData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="In" stroke="#8884d8" />
-              <Line type="monotone" dataKey="Out" stroke="#82ca9d" />
-            </LineChart>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper style={{ padding: 16 }}>
-            <Typography variant="h6" gutterBottom>
-              Vehicles In and Out
-            </Typography>
-            <Box display="flex" alignItems="center">
-              <DirectionsCarIcon style={{ fontSize: 60, marginRight: 16 }} />
-              <Typography variant="h4">150</Typography>
+    <Container maxWidth={false} disableGutters>
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          minHeight: '100vh', 
+          p: 3, 
+          backgroundImage: 'url(https://i.pinimg.com/474x/6c/c8/91/6cc89177662c8a8ea3939c6877ffdda0.jpg)', // Replace with your image URL
+          backgroundSize: 'cover', 
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          width: '100%',
+        }}
+      >
+        {activeComponent ? (
+          <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start', mb: 2 }}>
+              <Button 
+                variant="contained" 
+                onClick={handleBack}
+              >
+                Back to Dashboard
+              </Button>
             </Box>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper style={{ padding: 16 }}>
-            <Typography variant="h6" gutterBottom>
-              Total Revenue
+            {activeComponent}
+          </Box>
+        ) : (
+          <>
+            <Typography 
+              variant="h4" 
+              gutterBottom 
+              sx={{ mb: 4, textAlign: 'center', color: '#fff' }}
+            >
+              Welcome to the User Dashboard!
             </Typography>
-            <Box display="flex" alignItems="center">
-              <MonetizationOnIcon style={{ fontSize: 60, marginRight: 16 }} />
-              <Typography variant="h4">$50,000</Typography>
+            
+            <Typography 
+              variant="body1" 
+              gutterBottom 
+              sx={{ mb: 4, textAlign: 'center', color: '#fff' }}
+            >
+              Here’s what you can do:
+            </Typography>
+            
+            <Box 
+              sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: 2, 
+                width: '100%', 
+                alignItems: 'center', 
+                backgroundColor: 'rgba(0, 0, 0, 0.6)', // Add a semi-transparent background
+                p: 3,
+                borderRadius: 2,
+              }}
+            >
+              <Button 
+                variant="contained" 
+                color="primary" 
+                startIcon={<DirectionsCarIcon />} 
+                onClick={() => handleNavigation(<BookVehicle />)}
+                sx={{ width: '100%' }}
+              >
+                Book a Vehicle
+              </Button>
+              
+              <Button 
+                variant="contained" 
+                color="secondary" 
+                startIcon={<ListAltIcon />} 
+                onClick={() => handleNavigation(<BookedVehicles />)}
+                sx={{ width: '100%' }}
+              >
+                View Booking History
+              </Button>
+
+              <Button 
+                variant="contained" 
+                color="info" 
+                startIcon={<AssignmentIcon />} 
+                onClick={() => handleNavigation(<MyTickets />)}
+                sx={{ width: '100%' }}
+              >
+                File a Complaint
+              </Button>
+              
+              <Button 
+                variant="contained" 
+                color="success" 
+                startIcon={<AccountCircleIcon />} 
+                onClick={() => handleNavigation(<AccountSettings />)}
+                sx={{ width: '100%' }}
+              >
+                Change Account Settings
+              </Button>
             </Box>
-          </Paper>
-        </Grid>
-      </Grid>
+          </>
+        )}
+      </Box>
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={1500}
+        onClose={handleSnackbarClose}
+      >
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
-};
+}
 
 export default Dashboard;
