@@ -75,25 +75,36 @@ export interface Fleet {
 }
 
 
-// ./types.ts
-export interface Vehicle {
-  error: any;
+
+
+export interface CarCardProps {
   vehicle_id: number;
-  vehicleSpec_id: number | null;
-  rental_rate: string;
-  availability: boolean | null;
-  created_at: string | null;
-  updated_at: string | null;
+  rental_rate: number;
+  availability: boolean;
+  vehicle_image: string;
   vehicleSpec: {
-    manufacturer: string; 
+    manufacturer: string;
     model: string;
     year: number;
     fuel_type: string;
-    engine_capacity?: string | null;
-    transmission?: string | null;
-    seating_capacity?: number | null;
-    color?: string | null;
-    features?: string | null;
+    engine_capacity: string;
+    transmission: string;
+    seating_capacity: number;
+    color: string;
+    features: string;
   };
 }
 
+
+
+export interface VehicleSpec {
+  manufacturer: string;
+  model: string;
+  year: number;
+  fuel_type: string;
+  engine_capacity: string;
+  transmission: string;
+  seating_capacity: number;
+  color: string;
+  features: string;
+}

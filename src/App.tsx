@@ -1,8 +1,10 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+
+// Components
 import Navbar from './components/Navbar/Navbar';
+import Footer from './components/Footer/Footer';
 import HeroSection from './components/HeroSection/Herosection';
 import ServicesSection from './components/ServiceSection/Service';
 import ContactSection from './components/Contact/Contact';
@@ -12,18 +14,17 @@ import SignIn from './components/Registration/LoginForm';
 import SignUp from './components/Registration/RegisterForm';
 import DashboardLayout from './components/DashBoards/UserDashBoard/UserDashBoardLayout';
 import Dashboard from './components/DashBoards/UserDashBoard/Dashboard';
-import BookVehicle from './components/DashBoards/UserDashBoard/bookedvehicles';
 import BookedVehicles from './components/DashBoards/UserDashBoard/BookTheVehicles';
 import MyTickets from './components/DashBoards/UserDashBoard/Mytickets';
 import NewTicket from './components/DashBoards/UserDashBoard/NewTicket';
+import AdminDashboardLayout from './components/DashBoards/AdminDashBoard/admin.dash';
 import ManageVehicles from './components/DashBoards/AdminDashBoard/managevehicle';
 import ManageUsers from './components/DashBoards/AdminDashBoard/manageuser';
 import Reports from './components/DashBoards/AdminDashBoard/reports';
 import Locations from './components/DashBoards/AdminDashBoard/location';
 import CustomerSupportTickets from './components/DashBoards/AdminDashBoard/customersupporttickets';
 import FleetManagement from './components/DashBoards/AdminDashBoard/FleetManagement';
-import Footer from './components/Footer/Footer';
-import AdminDashboardLayout from './components/DashBoards/AdminDashBoard/admin.dash';
+import SuccessPage from './components/DashBoards/UserDashBoard/Success'; // Import the success page
 
 // Load Stripe with your public key
 const stripePromise = loadStripe('your-public-key-here');
@@ -51,10 +52,9 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/user/dashboard/*" element={
             <DashboardLayout>
-              <Routes> 
+              <Routes>
                 <Route index element={<Dashboard />} />
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="book-vehicle" element={<BookVehicle />} />
                 <Route path="booked-vehicles" element={<BookedVehicles />} />
                 <Route path="my-tickets" element={<MyTickets />} />
                 <Route path="new-ticket" element={<NewTicket />} />
@@ -74,6 +74,7 @@ const App = () => {
               </Routes>
             </AdminDashboardLayout>
           } />
+          <Route path="/payment-success" element={<SuccessPage />} /> {/* Add the success page route */}
         </Routes>
       </Router>
     </Elements>

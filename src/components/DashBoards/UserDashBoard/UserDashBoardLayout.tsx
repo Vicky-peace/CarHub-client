@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, AppBar, Typography, CssBaseline, Box, IconButton, Menu, MenuItem, Snackbar, Alert } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
@@ -7,11 +7,11 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-
 import MyTickets from './Mytickets';
 import NewTicket from './NewTicket';
-import BookedVehicles from './BookTheVehicles';
-import BookVehicle from './bookedvehicles';
+import BookedVehicles from './bookedvehicles';
+import BookVehicle from './BookTheVehicles';
+import AccountSettings from './account'; // Import the AccountSettings component
 
 const drawerWidth = 240;
 
@@ -22,8 +22,8 @@ interface DashboardLayoutProps {
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [activeComponent, setActiveComponent] = useState<ReactNode>(children);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null); // State for success message
-  const navigate = useNavigate(); // Initialize useNavigate for redirection
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleNavigation = (component: ReactNode) => {
     setActiveComponent(component);
@@ -38,11 +38,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   };
 
   const handleLogout = () => {
-    // Add your logout logic here
     console.log('User logged out');
-    setSuccessMessage('Logout successful'); // Show success message
-    setAnchorEl(null); // Close the menu
-    // Redirect to login page after a short delay
+    setSuccessMessage('Logout successful');
+    setAnchorEl(null);
     setTimeout(() => {
       navigate('/login');
     }, 1500);
@@ -99,7 +97,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+            backgroundColor: '#f4f6f8', // Background color of the sidebar
+          },
         }}
       >
         <Toolbar />
@@ -111,11 +113,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </ListItem>
             <ListItem button onClick={() => handleNavigation(<BookVehicle />)}>
               <ListItemIcon><DirectionsCarIcon /></ListItemIcon>
-              <ListItemText primary="Booked Vehicles" />
+              <ListItemText primary="Book A Vehicle" />
             </ListItem>
             <ListItem button onClick={() => handleNavigation(<BookedVehicles />)}>
               <ListItemIcon><ListAltIcon /></ListItemIcon>
-              <ListItemText primary="Book a Vehicle" />
+              <ListItemText primary="Booking History" />
             </ListItem>
             <ListItem button onClick={() => handleNavigation(<MyTickets />)}>
               <ListItemIcon><AssignmentIcon /></ListItemIcon>
@@ -124,6 +126,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <ListItem button onClick={() => handleNavigation(<NewTicket />)}>
               <ListItemIcon><AddCircleIcon /></ListItemIcon>
               <ListItemText primary="New Ticket" />
+            </ListItem>
+            <ListItem button onClick={() => handleNavigation(<AccountSettings />)}>
+              <ListItemIcon><AccountCircle /></ListItemIcon>
+              <ListItemText primary="Account" />
             </ListItem>
           </List>
         </Box>

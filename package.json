@@ -21,6 +21,7 @@
     "@stripe/stripe-js": "^4.1.0",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.2",
+    "cloudinary": "^2.3.0",
     "dayjs": "^1.11.11",
     "loglevel": "^1.9.1",
     "lucide-react": "^0.402.0",

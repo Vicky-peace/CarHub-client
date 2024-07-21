@@ -1,16 +1,50 @@
-// StripePayment.tsx
 import React from 'react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, CircularProgress } from '@mui/material';
+import { styled } from '@mui/system';
 
 interface StripePaymentProps {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
   onError: (error: string) => void;
+  totalAmount: number;
 }
 
-const StripePayment: React.FC<StripePaymentProps> = ({ open, onClose, onSuccess, onError }) => {
+const CardElementContainer = styled('div')({
+  padding: '15px 10px',
+  border: '1px solid #ccc',
+  borderRadius: '4px',
+  marginBottom: '20px',
+  backgroundColor: '#fff',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  width: '100%',
+});
+
+const StyledButton = styled(Button)({
+  marginTop: '20px',
+  padding: '10px 20px',
+  fontSize: '16px',
+  fontWeight: 'bold',
+});
+
+const StyledDialog = styled(Dialog)({
+  '& .MuiDialog-paper': {
+    width: '600px', // Increase width
+    height: '80vh', // Increase height
+    maxHeight: '80vh', // Set a maximum height
+  },
+});
+
+const FormContainer = styled('form')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'stretch',
+  justifyContent: 'space-between',
+  height: '100%', // Ensure the form takes the full height of the dialog
+});
+
+const StripePayment: React.FC<StripePaymentProps> = ({ open, onClose, onSuccess, onError, totalAmount }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = React.useState(false);
@@ -29,7 +63,7 @@ const StripePayment: React.FC<StripePaymentProps> = ({ open, onClose, onSuccess,
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ amount: 1000 }), 
+      body: JSON.stringify({ amount: totalAmount * 100 }), // totalAmount in cents
     });
     const { clientSecret } = await response.json();
     
@@ -50,26 +84,27 @@ const StripePayment: React.FC<StripePaymentProps> = ({ open, onClose, onSuccess,
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <StyledDialog open={open} onClose={onClose}>
       <DialogTitle>Payment</DialogTitle>
       <DialogContent>
-        <form onSubmit={handleSubmit}>
-          <CardElement options={{ hidePostalCode: true }} />
-          <Button
+        <FormContainer onSubmit={handleSubmit}>
+          <CardElementContainer>
+            <CardElement options={{ hidePostalCode: true }} />
+          </CardElementContainer>
+          <StyledButton
             type="submit"
             variant="contained"
             color="primary"
             disabled={!stripe || loading}
-            style={{ marginTop: '20px' }}
           >
             {loading ? <CircularProgress size={24} /> : 'Pay'}
-          </Button>
-        </form>
+          </StyledButton>
+        </FormContainer>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
       </DialogActions>
-    </Dialog>
+    </StyledDialog>
   );
 };
 
