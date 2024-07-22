@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, Grid, Avatar, Container, CircularProgress, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import PersonIcon from '@mui/icons-material/Person';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation'; // New icon for cars
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // New icon for payments
+import GroupIcon from '@mui/icons-material/Group'; // New icon for users
+import MapIcon from '@mui/icons-material/Map'; // New icon for locations
+import EventNoteIcon from '@mui/icons-material/EventNote'; // New icon for tickets
+import BookIcon from '@mui/icons-material/Book'; // New icon for bookings
 
 const AdminOverview: React.FC = () => {
   const theme = useTheme();
@@ -83,7 +84,7 @@ const AdminOverview: React.FC = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
                   <Avatar sx={{ backgroundColor: theme.palette.primary.main, padding: '8px' }}>
-                    <DirectionsCarIcon />
+                    <EmojiTransportationIcon />
                   </Avatar>
                 </Grid>
                 <Grid item xs>
@@ -104,7 +105,7 @@ const AdminOverview: React.FC = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
                   <Avatar sx={{ backgroundColor: theme.palette.secondary.main, padding: '8px' }}>
-                    <MonetizationOnIcon />
+                    <AttachMoneyIcon />
                   </Avatar>
                 </Grid>
                 <Grid item xs>
@@ -125,7 +126,7 @@ const AdminOverview: React.FC = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
                   <Avatar sx={{ backgroundColor: theme.palette.primary.main, padding: '8px' }}>
-                    <PersonIcon />
+                    <GroupIcon />
                   </Avatar>
                 </Grid>
                 <Grid item xs>
@@ -146,7 +147,7 @@ const AdminOverview: React.FC = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
                   <Avatar sx={{ backgroundColor: theme.palette.secondary.main, padding: '8px' }}>
-                    <LocationOnIcon />
+                    <MapIcon />
                   </Avatar>
                 </Grid>
                 <Grid item xs>
@@ -167,7 +168,7 @@ const AdminOverview: React.FC = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
                   <Avatar sx={{ backgroundColor: theme.palette.primary.main, padding: '8px' }}>
-                    <ConfirmationNumberIcon />
+                    <EventNoteIcon />
                   </Avatar>
                 </Grid>
                 <Grid item xs>
@@ -188,7 +189,7 @@ const AdminOverview: React.FC = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item>
                   <Avatar sx={{ backgroundColor: theme.palette.secondary.main, padding: '8px' }}>
-                    <DirectionsCarIcon />
+                    <BookIcon />
                   </Avatar>
                 </Grid>
                 <Grid item xs>
