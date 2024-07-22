@@ -6,7 +6,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MyTickets from './Mytickets';
 import BookVehicle from './BookTheVehicles';
-import BookedVehicles from './bookedvehicles';
+import BookingHistory from './BookingHistory';
 import AccountSettings from './account';
 
 const Dashboard: React.FC = () => {
@@ -98,7 +98,7 @@ const Dashboard: React.FC = () => {
                 variant="contained" 
                 color="secondary" 
                 startIcon={<ListAltIcon />} 
-                onClick={() => handleNavigation(<BookedVehicles />)}
+                onClick={() => handleNavigation(<BookingHistory />)}
                 sx={{ width: '100%' }}
               >
                 View Booking History

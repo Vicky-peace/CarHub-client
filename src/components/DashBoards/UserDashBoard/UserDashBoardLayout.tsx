@@ -9,7 +9,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MyTickets from './Mytickets';
 import NewTicket from './NewTicket';
-import BookedVehicles from './bookedvehicles';
+import BookingHistory from './BookingHistory';
 import BookVehicle from './BookTheVehicles';
 import AccountSettings from './account'; // Import the AccountSettings component
 
@@ -115,7 +115,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               <ListItemIcon><DirectionsCarIcon /></ListItemIcon>
               <ListItemText primary="Book A Vehicle" />
             </ListItem>
-            <ListItem button onClick={() => handleNavigation(<BookedVehicles />)}>
+            <ListItem button onClick={() => handleNavigation(<BookingHistory />)}>
               <ListItemIcon><ListAltIcon /></ListItemIcon>
               <ListItemText primary="Booking History" />
             </ListItem>
