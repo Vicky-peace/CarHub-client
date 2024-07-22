@@ -1,15 +1,29 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import 'semantic-ui-css/semantic.min.css';
-import { store } from './store.ts'; 
-import App from './App.tsx'; 
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { store } from './store.ts'; // Ensure your Redux store is correctly imported
+import App from './App.tsx'; // Adjust path based on your application structure
 
-// Render your application with Redux Provider
-createRoot(document.getElementById('root')!).render(
+// Create a custom theme
+const theme = extendTheme({
+  colors: {
+    primary: '#1976d2',
+    secondary: '#dc004e',
+  },
+  fonts: {
+    body: 'Roboto, sans-serif',
+  },
+});
+
+// Render your application with ChakraProvider and Redux Provider
+ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <ChakraProvider theme={theme}>
+        <App />
+      </ChakraProvider>
     </Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
