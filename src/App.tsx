@@ -1,6 +1,9 @@
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 
 // Components
 import Navbar from './components/Navbar/Navbar';
@@ -25,8 +28,8 @@ import Reports from './components/DashBoards/AdminDashBoard/reports';
 import Locations from './components/DashBoards/AdminDashBoard/location';
 import CustomerSupportTickets from './components/DashBoards/AdminDashBoard/customersupporttickets';
 import FleetManagement from './components/DashBoards/AdminDashBoard/FleetManagement';
-import SuccessPage from './components/DashBoards/UserDashBoard/Success'; // Import the success page
-import Cancel from './components/DashBoards/UserDashBoard/Cancel'; // Import the cancel page
+import SuccessPage from './components/DashBoards/UserDashBoard/Success';
+import Cancel from './components/DashBoards/UserDashBoard/Cancel';
 
 // Load Stripe with your public key
 const stripePromise = loadStripe('your-public-key-here');
@@ -44,7 +47,6 @@ const App = () => {
               <WhyChoose />
               <ServicesSection />
               <ContactSection />
-              <Footer />
             </>
           } />
           <Route path="/services" element={<ServicesSection />} />
@@ -78,9 +80,10 @@ const App = () => {
             </AdminDashboardLayout>
           } />
           <Route path="/payment-success" element={<SuccessPage />} />
-          <Route path="/payment-canceled" element={<Cancel />} /> {/* Add the cancel page route */}
+          <Route path="/payment-canceled" element={<Cancel />} />
         </Routes>
         <Footer />
+        <ToastContainer /> {/* Add ToastContainer here */}
       </Router>
     </Elements>
   );
