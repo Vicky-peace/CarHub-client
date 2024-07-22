@@ -1,16 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { authApi } from './AuthApi';
 import { bookingsApi } from './components/DashBoards/UserDashBoard/Slices/apiBookings';
-
 import { vehiclesApi } from './components/DashBoards/UserDashBoard/Slices/apislice';
-import { ticketsApi } from './components/DashBoards/UserDashBoard/Slices/ticketsapi'; 
+import { ticketsApi } from './components/DashBoards/UserDashBoard/Slices/ticketsapi';
 import { fleetApi } from './components/DashBoards/AdminDashBoard/Slices/fleetapi';
 import { locationsApi } from './components/DashBoards/AdminDashBoard/Slices/locationapi';
 import { supportTicketsApi } from './components/DashBoards/AdminDashBoard/Slices/supportticketapi';
 import { usersApi } from './components/DashBoards/AdminDashBoard/Slices/Userapi';
-import {vehiclesApii} from './components/DashBoards/AdminDashBoard/Slices/managevehiclesapi'
+import { vehiclesApii } from './components/DashBoards/AdminDashBoard/Slices/managevehiclesapi';
 import { locationApi } from './components/DashBoards/UserDashBoard/LOCATION';
 import { paymentApi } from './components/DashBoards/UserDashBoard/Slices/paymentsApi';
+import { dashboardApi } from './components/DashBoards/AdminDashBoard/Slices/DashBoardapi'; // Import your new API slice
 
 export const store = configureStore({
   reducer: {
@@ -23,9 +23,9 @@ export const store = configureStore({
     [locationsApi.reducerPath]: locationsApi.reducer,
     [supportTicketsApi.reducerPath]: supportTicketsApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
-
     [locationApi.reducerPath]: locationApi.reducer,
     [paymentApi.reducerPath]: paymentApi.reducer,
+    [dashboardApi.reducerPath]: dashboardApi.reducer, // Add the new API slice reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -39,7 +39,8 @@ export const store = configureStore({
       usersApi.middleware,
       vehiclesApii.middleware,
       locationApi.middleware,
-      paymentApi.middleware
+      paymentApi.middleware,
+      dashboardApi.middleware // Add the new API slice middleware
     ),
 });
 

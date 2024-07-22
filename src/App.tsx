@@ -14,7 +14,8 @@ import SignIn from './components/Registration/LoginForm';
 import SignUp from './components/Registration/RegisterForm';
 import DashboardLayout from './components/DashBoards/UserDashBoard/UserDashBoardLayout';
 import Dashboard from './components/DashBoards/UserDashBoard/Dashboard';
-import BookedVehicles from './components/DashBoards/UserDashBoard/BookTheVehicles';
+import BookTheVehicles from './components/DashBoards/UserDashBoard/BookTheVehicles';
+import BookingHistory from './components/DashBoards/UserDashBoard/bookedvehicles';
 import MyTickets from './components/DashBoards/UserDashBoard/Mytickets';
 import NewTicket from './components/DashBoards/UserDashBoard/NewTicket';
 import AdminDashboardLayout from './components/DashBoards/AdminDashBoard/admin.dash';
@@ -25,6 +26,7 @@ import Locations from './components/DashBoards/AdminDashBoard/location';
 import CustomerSupportTickets from './components/DashBoards/AdminDashBoard/customersupporttickets';
 import FleetManagement from './components/DashBoards/AdminDashBoard/FleetManagement';
 import SuccessPage from './components/DashBoards/UserDashBoard/Success'; // Import the success page
+import Cancel from './components/DashBoards/UserDashBoard/Cancel'; // Import the cancel page
 
 // Load Stripe with your public key
 const stripePromise = loadStripe('your-public-key-here');
@@ -55,7 +57,8 @@ const App = () => {
               <Routes>
                 <Route index element={<Dashboard />} />
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="booked-vehicles" element={<BookedVehicles />} />
+                <Route path="booked-vehicles" element={<BookTheVehicles />} />
+                <Route path="BookingHistory" element={<BookingHistory />} />
                 <Route path="my-tickets" element={<MyTickets />} />
                 <Route path="new-ticket" element={<NewTicket />} />
               </Routes>
@@ -74,8 +77,10 @@ const App = () => {
               </Routes>
             </AdminDashboardLayout>
           } />
-          <Route path="/payment-success" element={<SuccessPage />} /> {/* Add the success page route */}
+          <Route path="/payment-success" element={<SuccessPage />} />
+          <Route path="/payment-canceled" element={<Cancel />} /> {/* Add the cancel page route */}
         </Routes>
+        <Footer />
       </Router>
     </Elements>
   );

@@ -1,12 +1,16 @@
+// src/components/DashBoards/AdminDashBoard/AdminDashboardLayout.tsx
 import React, { useState } from 'react';
 import { Box, Grid, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, AppBar, IconButton, Menu, MenuItem, Snackbar, Alert } from '@mui/material';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+
+// Import the new DashboardSummary component
+import DashboardSummary from './Slices/Dashboard';
 
 import ManageVehicles from './managevehicle';
 import ManageUsers from './manageuser';
@@ -20,10 +24,10 @@ const drawerWidth = 240;
 interface AdminDashboardLayoutProps {}
 
 const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = () => {
-  const [activeComponent, setActiveComponent] = useState<React.ReactNode>(<Typography variant="h6">Welcome to Admin Dashboard</Typography>);
+  const [activeComponent, setActiveComponent] = useState<React.ReactNode>(<DashboardSummary />);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null); // State for success message
-  const navigate = useNavigate(); // Initialize useNavigate for redirection
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleNavigation = (component: React.ReactNode) => {
     setActiveComponent(component);
@@ -102,7 +106,7 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = () => {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            <ListItem button onClick={() => handleNavigation(<Typography variant="h6">Welcome to Admin Dashboard</Typography>)}>
+            <ListItem button onClick={() => handleNavigation(<DashboardSummary />)}>
               <ListItemIcon><DashboardIcon /></ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItem>

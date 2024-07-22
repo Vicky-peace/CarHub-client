@@ -24,6 +24,8 @@
     "axios": "^1.7.2",
     "cloudinary": "^2.3.0",
     "dayjs": "^1.11.11",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "loglevel": "^1.9.1",
     "lucide-react": "^0.402.0",
     "persist": "^0.2.7",

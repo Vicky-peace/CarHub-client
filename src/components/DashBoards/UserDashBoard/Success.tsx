@@ -7,7 +7,11 @@ const SuccessPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleReturnToDashboard = () => {
-    navigate('/user/dashboard'); // Change this path as needed
+    navigate('/user/dashboard');
+  };
+
+  const handleViewBookingHistory = () => {
+    navigate('/user/dashboard/BookingHistory');
   };
 
   return (
@@ -22,9 +26,17 @@ const SuccessPage: React.FC = () => {
         variant="contained" 
         color="primary" 
         onClick={handleReturnToDashboard}
-        sx={{ marginTop: '20px' }}
+        sx={{ marginTop: '40px', marginRight: '20px' }}
       >
         Return to Dashboard
+      </Button>
+      <Button 
+        variant="contained" 
+        color="secondary" 
+        onClick={handleViewBookingHistory}
+        sx={{ marginTop: '40px' }}
+      >
+        View Booking History
       </Button>
     </Box>
   );
