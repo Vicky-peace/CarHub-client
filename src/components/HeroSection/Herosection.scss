@@ -22,12 +22,13 @@
   background-repeat: no-repeat;
   color: white;
   text-align: center;
-  padding: 4rem 2rem;
-  height: 50vh;
+height:70vh;
+box-sizing: border-box; 
   align-items: center;
   justify-content: center;
   animation: changeBackground 15s infinite linear;
-
+  margin-top: 10px;
+  padding: 2rem 1rem;
   &::before {
     content: "";
     position: absolute;

@@ -1,76 +1,69 @@
 .about {
-  // padding: 4rem 2rem;
   background-color: #f9f9f9;
   margin-top: 10px;
+  padding: 2rem 1rem; // Padding added for better spacing
+  box-sizing: border-box; // Ensure padding is included in width calculations
 
   .about-content {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    flex-direction: row; // Stack vertically on smaller screens
+    align-items: center; // Center-align items
+    justify-content: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 2rem;
-    
     background-color: #fff;
-  height: 50vh;
+    margin: 0 auto; // Center the container
+    max-width: 100%; // Constrain width for larger screens
 
     .about-image {
-      max-width: 40%;
-      height:40vh;
+      max-width: 500px;
+      height: 300px; // Maintain aspect ratio
       border-radius: 8px;
       border: none;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin-top: 15px;
-      margin-left: 5px;
+      margin-top: 20px;
+      margin-right: 15px;
     }
 
     .about-text {
-      max-width: 55%;
-      text-align: left;
-      margin-left: 2rem;
-    
+      max-width: 100%;
+      text-align: center; // Center-align text
+      margin: 2rem 0;
+      padding: 23px;
 
       h2 {
-        font-size: 2.5rem;
+        font-size: 2rem; // Adjusted font size
         margin-bottom: 1rem;
         color: #333;
       }
 
       h3 {
-        font-size: 1.7rem;
+        font-size: 1.5rem; // Adjusted font size
         margin-bottom: 1rem;
         color: #666;
       }
 
       p {
-        font-size: 1.5rem;
+        font-size: 1rem; // Adjusted font size
         margin-bottom: 2rem;
         color: #555;
-        line-height: 2rem;
-      }
-
-      .signature {
-        font-style: italic;
-        font-weight: bold;
-        color: #333;
-      }
-
-      .signature-image {
-        max-width: 100px;
-        margin-top: 0.5rem;
+        line-height: 1.6rem; // Adjusted line height
       }
     }
   }
 
   .about-stats {
     display: flex;
+    flex-wrap: wrap; // Allow items to wrap on smaller screens
     justify-content: space-around;
     margin-top: 2rem;
+    max-width: 100%; // Constrain width for larger screens
+    margin: 0 auto; // Center the container
 
     .stat-item {
       text-align: center;
-      flex: 1;
-      margin: 0 1rem;
+      flex: 1 1 200px; // Allow items to grow and shrink
+      margin: 1rem;
       padding: 1rem;
       background-color: #fff;
       border-radius: 8px;
@@ -85,7 +78,6 @@
       p {
         font-size: 1rem;
         color: #555;
-     
       }
     }
   }
@@ -96,17 +88,13 @@
       text-align: center;
 
       .about-image {
-        max-width: 80%;
+        max-width: 90%;
         margin-bottom: 1rem;
       }
 
       .about-text {
         max-width: 100%;
         margin-left: 0;
-
-        h2, h3, p {
-          text-align: center;
-        }
       }
     }
 
@@ -115,6 +103,7 @@
 
       .stat-item {
         margin-bottom: 1rem;
+        flex: 1 1 auto; // Allow flex items to grow and shrink
       }
     }
   }
