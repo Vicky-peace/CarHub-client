@@ -3,7 +3,7 @@
   margin-top: 10px;
   padding: 2rem 1rem; // Padding added for better spacing
   box-sizing: border-box; // Ensure padding is included in width calculations
-
+max-width: 100%;
   .about-content {
     display: flex;
     flex-direction: row; // Stack vertically on smaller screens
@@ -11,9 +11,9 @@
     justify-content: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 2rem;
-    background-color: #fff;
+    background-color:none;
     margin: 0 auto; // Center the container
-    max-width: 100%; // Constrain width for larger screens
+  // Constrain width for larger screens
 
     .about-image {
       max-width: 500px;
@@ -30,6 +30,7 @@
       text-align: center; // Center-align text
       margin: 2rem 0;
       padding: 23px;
+
 
       h2 {
         font-size: 2rem; // Adjusted font size
@@ -55,7 +56,7 @@
   .about-stats {
     display: flex;
     flex-wrap: wrap; // Allow items to wrap on smaller screens
-    justify-content: space-around;
+    justify-content: space-between;
     margin-top: 2rem;
     max-width: 100%; // Constrain width for larger screens
     margin: 0 auto; // Center the container
