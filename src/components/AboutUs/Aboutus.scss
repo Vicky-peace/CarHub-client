@@ -1,69 +1,68 @@
 .about {
   background-color: #f9f9f9;
   margin-top: 10px;
-  padding: 2rem 1rem; // Padding added for better spacing
-  box-sizing: border-box; // Ensure padding is included in width calculations
-max-width: 100%;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+justify-content: space-between;
+
   .about-content {
     display: flex;
-    flex-direction: row; // Stack vertically on smaller screens
-    align-items: center; // Center-align items
-    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 2rem;
-    background-color:none;
-    margin: 0 auto; // Center the container
-  // Constrain width for larger screens
+    background-color: #fff; // Added background color for better visibility
+    border-radius: 8px;
+ 
 
     .about-image {
-      max-width: 500px;
-      height: 300px; // Maintain aspect ratio
+      flex: 0.2; // Takes up half of the container
+      max-width: 50%;
+      height: 50%; // Ensure image covers its container height
+      object-fit: contain;
+      margin-right: 60px;
       border-radius: 8px;
-      border: none;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin-top: 20px;
-      margin-right: 15px;
+      margin-right: 1rem;
     }
 
     .about-text {
-      max-width: 100%;
-      text-align: center; // Center-align text
-      margin: 2rem 0;
-      padding: 23px;
-
+      flex: 1; // Takes up half of the container
+      text-align: left; // Align text to the left for better readability
+      margin: 0 1rem;
+margin-left: 70px;
 
       h2 {
-        font-size: 2rem; // Adjusted font size
+        font-size: 2rem;
         margin-bottom: 1rem;
         color: #333;
       }
 
       h3 {
-        font-size: 1.5rem; // Adjusted font size
+        font-size: 1.5rem;
         margin-bottom: 1rem;
         color: #666;
       }
 
       p {
-        font-size: 1rem; // Adjusted font size
+        font-size: 1rem;
         margin-bottom: 2rem;
         color: #555;
-        line-height: 1.6rem; // Adjusted line height
+        line-height: 1.6;
       }
     }
   }
 
   .about-stats {
     display: flex;
-    flex-wrap: wrap; // Allow items to wrap on smaller screens
+    flex-wrap: wrap;
     justify-content: space-between;
     margin-top: 2rem;
-    max-width: 100%; // Constrain width for larger screens
-    margin: 0 auto; // Center the container
+    max-width: 100%;
+    margin: 0 auto;
 
     .stat-item {
       text-align: center;
-      flex: 1 1 200px; // Allow items to grow and shrink
+      flex: 1 1 200px;
       margin: 1rem;
       padding: 1rem;
       background-color: #fff;
@@ -89,13 +88,11 @@ max-width: 100%;
       text-align: center;
 
       .about-image {
-        max-width: 90%;
         margin-bottom: 1rem;
       }
 
       .about-text {
-        max-width: 100%;
-        margin-left: 0;
+        margin: 0;
       }
     }
 
@@ -104,7 +101,7 @@ max-width: 100%;
 
       .stat-item {
         margin-bottom: 1rem;
-        flex: 1 1 auto; // Allow flex items to grow and shrink
+        flex: 1 1 auto;
       }
     }
   }

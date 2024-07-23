@@ -30,7 +30,7 @@ import CustomerSupportTickets from './components/DashBoards/AdminDashBoard/custo
 import FleetManagement from './components/DashBoards/AdminDashBoard/FleetManagement';
 import SuccessPage from './components/DashBoards/UserDashBoard/Success';
 import Cancel from './components/DashBoards/UserDashBoard/Cancel';
-
+import Cars from './components/Cars/Cats'
 // Load Stripe with your public key
 const stripePromise = loadStripe('your-public-key-here');
 
@@ -44,6 +44,7 @@ const App = () => {
             <>
               <HeroSection />
               <About />
+              <Cars/>
               <WhyChoose />
               <ServicesSection />
               <ContactSection />

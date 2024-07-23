@@ -1,5 +1,5 @@
 import './Aboutus.scss';
-import carImage from '../../assets/images/car image.webp';
+import carImage from '../../assets/images/The BMW M850i at SIXT.jpeg';
 
 const About = () => {
   return (
